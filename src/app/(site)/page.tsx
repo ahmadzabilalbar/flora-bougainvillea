@@ -35,19 +35,19 @@ export default async function Home() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 text-pretty">{c.heroSubtitle}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/collection" className="btn-primary px-6 py-3 text-base">
-                Explore the collection
+                Terokai koleksi
               </Link>
               <Link href="#about" className="btn-ghost px-6 py-3 text-base">
-                Our story
+                Kisah kami
               </Link>
             </div>
             <dl className="mt-12 flex gap-10">
               <div>
-                <dt className="text-sm text-stone-500">Varieties</dt>
+                <dt className="text-sm text-stone-500">Varieti</dt>
                 <dd className="font-display text-3xl text-leaf-900">{varieties.length}</dd>
               </div>
               <div>
-                <dt className="text-sm text-stone-500">Types</dt>
+                <dt className="text-sm text-stone-500">Jenis</dt>
                 <dd className="font-display text-3xl text-leaf-900">{types.length}</dd>
               </div>
             </dl>
@@ -99,7 +99,7 @@ export default async function Home() {
                 <div className="text-sm text-stone-500">
                   {(() => {
                     const n = varieties.filter((v) => v.typeId === t.id).length;
-                    return `${n} variet${n === 1 ? "y" : "ies"}`;
+                    return `${n} varieti`;
                   })()}
                 </div>
               </Link>
@@ -112,11 +112,11 @@ export default async function Home() {
       <section className="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Featured</p>
-            <h2 className="mt-2 font-display text-4xl text-leaf-900">In bloom this season</h2>
+            <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Pilihan</p>
+            <h2 className="mt-2 font-display text-4xl text-leaf-900">Sedang berbunga musim ini</h2>
           </div>
           <Link href="/collection" className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block">
-            View all →
+            Lihat semua →
           </Link>
         </div>
         {featured.length ? (
@@ -127,7 +127,7 @@ export default async function Home() {
           </div>
         ) : (
           <p className="mt-8 rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
-            The collection is being planted — check back soon.
+            Koleksi sedang ditanam — sila kembali tidak lama lagi.
           </p>
         )}
       </section>
@@ -145,10 +145,10 @@ export default async function Home() {
 
       {/* Contact */}
       <section id="contact" className="mx-auto mt-28 max-w-3xl scroll-mt-24 px-4 text-center sm:px-6">
-        <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Say hello</p>
-        <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Find your perfect bloom</h2>
+        <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Sapa kami</p>
+        <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Cari bunga idaman anda</h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-stone-600">
-          Ask about availability, sizes or custom arrangements — we&apos;re happy to help.
+          Tanya tentang stok, saiz atau gubahan khas — kami sedia membantu.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           {c.whatsapp && (
@@ -158,7 +158,7 @@ export default async function Home() {
               rel="noopener noreferrer"
               className="btn-primary px-6 py-3 text-base"
             >
-              Chat on WhatsApp
+              Sembang di WhatsApp
             </a>
           )}
           {c.contactEmail && (

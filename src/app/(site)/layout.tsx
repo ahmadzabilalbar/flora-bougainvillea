@@ -9,8 +9,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const [c, pages] = await Promise.all([safe(getContent(), defaults), safe(getPages(), [])]);
   const published = pages.filter((p) => p.published);
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/collection", label: "Collection" },
+    { href: "/", label: "Utama" },
+    { href: "/collection", label: "Koleksi" },
     ...published.slice(0, 3).map((p) => ({ href: `/pages/${p.slug}`, label: p.title })),
   ];
 
@@ -28,9 +28,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <p className="mt-3 max-w-xs text-sm text-leaf-100/70">{c.footerText}</p>
           </div>
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Explore</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Terokai</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              {[{ href: "/collection", label: "Collection" }, ...published.map((p) => ({ href: `/pages/${p.slug}`, label: p.title }))].map(
+              {[{ href: "/collection", label: "Koleksi" }, ...published.map((p) => ({ href: `/pages/${p.slug}`, label: p.title }))].map(
                 (l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="hover:text-white">
@@ -42,7 +42,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             </ul>
           </div>
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Contact</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Hubungi</h3>
             <ul className="mt-4 space-y-2 text-sm">
               {c.contactEmail && (
                 <li>

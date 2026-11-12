@@ -53,29 +53,29 @@ export type Page = {
 // Editable site content (the "CMS" key/value store).
 export const CONTENT_FIELDS = [
   { key: "siteName", label: "Site name", type: "text", default: "Flora Bougainvillea" },
-  { key: "tagline", label: "Tagline", type: "text", default: "Paper flowers, tropical soul." },
-  { key: "heroTitle", label: "Hero title", type: "text", default: "A living palette of bougainvillea" },
+  { key: "tagline", label: "Tagline", type: "text", default: "Bunga kertas, jiwa tropika." },
+  { key: "heroTitle", label: "Hero title", type: "text", default: "Palet warna bougainvillea yang hidup" },
   {
     key: "heroSubtitle",
     label: "Hero subtitle",
     type: "textarea",
     default:
-      "Explore our curated collection of bougainvillea varieties — from blazing magenta climbers to delicate bicolour dwarfs, grown with care in the tropics.",
+      "Terokai koleksi varieti bougainvillea pilihan kami — daripada pokok memanjat magenta yang menyala hingga varieti kerdil dwiwarna yang halus, ditanam dengan teliti di bumi tropika.",
   },
   { key: "heroImage", label: "Hero image URL", type: "image", default: "" },
-  { key: "aboutTitle", label: "About title", type: "text", default: "Grown with patience" },
+  { key: "aboutTitle", label: "About title", type: "text", default: "Ditanam dengan penuh kesabaran" },
   {
     key: "aboutBody",
     label: "About text",
     type: "textarea",
     default:
-      "We are a small nursery devoted to bougainvillea. Every plant is propagated, shaped and hardened in full sun so it thrives in your garden, balcony or bonsai pot.",
+      "Kami ialah tapak semaian kecil yang khusus untuk bougainvillea. Setiap pokok dibiak, dibentuk dan dikeraskan di bawah cahaya matahari penuh supaya ia subur di taman, balkoni atau pasu bonsai anda.",
   },
   { key: "contactEmail", label: "Contact email", type: "text", default: "hello@example.com" },
   { key: "contactPhone", label: "Contact phone", type: "text", default: "" },
   { key: "whatsapp", label: "WhatsApp number (digits only, with country code)", type: "text", default: "" },
   { key: "address", label: "Address", type: "textarea", default: "" },
-  { key: "footerText", label: "Footer text", type: "text", default: "Grown in the sun, shared with love." },
+  { key: "footerText", label: "Footer text", type: "text", default: "Tumbuh di bawah mentari, dikongsi dengan kasih." },
 ] as const;
 
 export type ContentKey = (typeof CONTENT_FIELDS)[number]["key"];

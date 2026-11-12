@@ -15,6 +15,17 @@ const NAMED: Record<string, [string, string]> = {
   peach: ["#fb923c", "#fed7aa"],
   salmon: ["#f97316", "#fecaca"],
   lavender: ["#a78bfa", "#ede9fe"],
+  // Bahasa Melayu ("merah jambu" must come before "merah")
+  "merah jambu": ["#ec4899", "#fbcfe8"],
+  merah: ["#dc2626", "#f87171"],
+  ungu: ["#7e22ce", "#c084fc"],
+  jingga: ["#ea580c", "#fdba74"],
+  oren: ["#ea580c", "#fdba74"],
+  koral: ["#f43f5e", "#fda4af"],
+  emas: ["#d97706", "#fcd34d"],
+  kuning: ["#ca8a04", "#fde047"],
+  putih: ["#d6d3d1", "#fafaf9"],
+  krim: ["#d6c7a1", "#fefce8"],
 };
 
 /** Returns a [deep, light] colour pair for a free-text colour like "Deep Purple". */

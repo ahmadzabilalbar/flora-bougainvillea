@@ -36,7 +36,7 @@ export function CollectionBrowser({
     <>
       <div className="sticky top-16 z-30 -mx-4 mt-8 flex flex-col gap-3 bg-cream/85 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 md:flex-row md:items-center md:justify-between">
         <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
-          {[{ id: "", name: "All" }, ...types].map((t) => (
+          {[{ id: "", name: "Semua" }, ...types].map((t) => (
             <button
               key={t.id}
               onClick={() => select(t.id)}
@@ -59,9 +59,9 @@ export function CollectionBrowser({
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search name or colour…"
+            placeholder="Cari nama atau warna…"
             className="input rounded-full pl-10"
-            aria-label="Search varieties"
+            aria-label="Cari varieti"
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ export function CollectionBrowser({
         </div>
       ) : (
         <p className="mt-10 rounded-3xl border border-dashed border-stone-300 p-12 text-center text-stone-500">
-          No varieties match your filters.
+          Tiada varieti yang sepadan dengan carian anda.
         </p>
       )}
     </>

@@ -23,12 +23,12 @@ export default async function VarietyPage({ params }: Props) {
   if (!v) notFound();
   const type = types.find((t) => t.id === v.typeId);
   const related = all.filter((x) => x.published && x.id !== v.id && x.typeId === v.typeId).slice(0, 4);
-  const enquiry = encodeURIComponent(`Hi! I'm interested in the bougainvillea "${v.name}".`);
+  const enquiry = encodeURIComponent(`Hai! Saya berminat dengan bougainvillea "${v.name}".`);
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
       <Link href="/collection" className="text-sm text-stone-500 hover:text-stone-900">
-        ← Back to collection
+        ← Kembali ke koleksi
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-white shadow-xl shadow-bract-900/10">
@@ -46,7 +46,7 @@ export default async function VarietyPage({ params }: Props) {
           <h1 className="mt-4 font-display text-5xl leading-tight text-leaf-900 sm:text-6xl">{v.name}</h1>
           {v.color && (
             <p className="mt-3 text-lg text-stone-500">
-              Bract colour: <span className="text-stone-800">{v.color}</span>
+              Warna brakta: <span className="text-stone-800">{v.color}</span>
             </p>
           )}
           {v.description && (
@@ -54,7 +54,7 @@ export default async function VarietyPage({ params }: Props) {
           )}
           {type?.description && (
             <div className="mt-8 rounded-2xl bg-white p-5 ring-1 ring-stone-200/70">
-              <div className="text-sm font-medium text-leaf-900">About {type.name}</div>
+              <div className="text-sm font-medium text-leaf-900">Tentang {type.name}</div>
               <p className="mt-1 text-sm text-stone-600">{type.description}</p>
             </div>
           )}
@@ -66,7 +66,7 @@ export default async function VarietyPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="btn-primary px-6 py-3 text-base"
               >
-                Enquire on WhatsApp
+                Tanya melalui WhatsApp
               </a>
             )}
             {c.contactEmail && (
@@ -74,7 +74,7 @@ export default async function VarietyPage({ params }: Props) {
                 href={`mailto:${c.contactEmail}?subject=${encodeURIComponent(v.name)}&body=${enquiry}`}
                 className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}
               >
-                Enquire by email
+                Tanya melalui e-mel
               </a>
             )}
           </div>
@@ -83,7 +83,7 @@ export default async function VarietyPage({ params }: Props) {
 
       {related.length > 0 && (
         <section className="mt-24">
-          <h2 className="font-display text-3xl text-leaf-900">More {type?.name ?? "varieties"}</h2>
+          <h2 className="font-display text-3xl text-leaf-900">{type ? `Lagi dari ${type.name}` : "Varieti lain"}</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((r) => (
               <VarietyCard key={r.id} v={r} typeName={type?.name} />

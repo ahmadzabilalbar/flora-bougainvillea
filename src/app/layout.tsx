@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${fraunces.variable}`}>
+    <html lang="ms" className={`${geist.variable} ${fraunces.variable}`}>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );
