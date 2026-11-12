@@ -101,17 +101,25 @@ export default async function Home() {
               <Link
                 key={t.id}
                 href={`/koleksi?type=${encodeURIComponent(t.id)}`}
-                className="shrink-0 rounded-2xl bg-white px-5 py-4 ring-1 ring-stone-200/70 transition hover:ring-bract-300"
+                className="w-64 shrink-0 rounded-2xl bg-white px-5 py-4 ring-1 ring-stone-200/70 transition hover:ring-bract-300"
               >
-                <div className="font-medium text-leaf-900">{t.name}</div>
-                <div className="text-sm text-stone-500">
-                  {(() => {
-                    const n = varieties.filter((v) => v.typeId === t.id).length;
-                    return `${n} varieti`;
-                  })()}
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="truncate font-medium text-leaf-900">{t.name}</span>
+                  <span className="shrink-0 text-xs text-stone-500">
+                    {varieties.filter((v) => v.typeId === t.id).length} varieti
+                  </span>
                 </div>
+                {t.description && <p className="mt-1.5 line-clamp-2 text-sm text-stone-500">{t.description}</p>}
               </Link>
             ))}
+            {isOn(c.showTypeName) && (
+              <Link
+                href="/jenis"
+                className="grid w-40 shrink-0 place-items-center rounded-2xl bg-leaf-900 px-5 py-4 text-center text-sm font-medium text-white transition hover:bg-leaf-700"
+              >
+                Semua jenis →
+              </Link>
+            )}
           </div>
         </section>
       )}
@@ -124,10 +132,7 @@ export default async function Home() {
               <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Kegemaran</p>
               <h2 className="mt-2 font-display text-4xl text-leaf-900">Tengah mekar sekarang</h2>
             </div>
-            <Link
-              href="/koleksi"
-              className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block"
-            >
+            <Link href="/koleksi" className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block">
               Tengok semua →
             </Link>
           </div>
@@ -164,7 +169,8 @@ export default async function Home() {
           <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Jom sembang</p>
           <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Sama-sama minat bougainvillea?</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-stone-600">
-            Nak tanya tips jaga pokok, kongsi gambar bunga atau sekadar bersembang? Mesej je — seronok jumpa sesama peminat.
+            Nak tanya tips jaga pokok, kongsi gambar bunga atau sekadar bersembang? Mesej je — seronok jumpa sesama
+            peminat.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {c.whatsapp && (

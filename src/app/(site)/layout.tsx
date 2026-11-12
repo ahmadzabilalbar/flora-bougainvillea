@@ -11,6 +11,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const links = [
     { href: "/", label: "Utama" },
     { href: "/koleksi", label: "Koleksi" },
+    ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
     ...published.slice(0, 3).map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
   ];
 
@@ -30,15 +31,17 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Terokai</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              {[{ href: "/koleksi", label: "Koleksi" }, ...published.map((p) => ({ href: `/halaman/${p.slug}`, label: p.title }))].map(
-                (l) => (
-                  <li key={l.href}>
-                    <Link href={l.href} className="hover:text-white">
-                      {l.label}
-                    </Link>
-                  </li>
-                ),
-              )}
+              {[
+                { href: "/koleksi", label: "Koleksi" },
+                ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
+                ...published.map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="hover:text-white">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
