@@ -4,7 +4,7 @@ import path from "path";
 import { randomUUID } from "crypto";
 
 // The admin compresses images in the browser first (src/lib/compress-image.ts); this is the hard cap.
-const MAX_BYTES = 1.5 * 1024 * 1024;
+const MAX_BYTES = 1.2 * 1024 * 1024; // up to 3 photos per save must fit in one request
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
 
 export function isValidImageUrl(url: string) {
@@ -18,7 +18,7 @@ export function isValidImageUrl(url: string) {
  */
 export async function saveUpload(file: File): Promise<string> {
   if (!ALLOWED.includes(file.type)) throw new Error("Image must be JPG, PNG, WebP, GIF or AVIF.");
-  if (file.size > MAX_BYTES) throw new Error("Image is too large (max 1.5 MB). Please choose a smaller photo.");
+  if (file.size > MAX_BYTES) throw new Error("Image is too large (max 1.2 MB). Please choose a smaller photo.");
 
   const ext = file.type.split("/")[1].replace("jpeg", "jpg");
   const name = `${randomUUID()}.${ext}`;

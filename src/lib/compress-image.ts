@@ -5,7 +5,7 @@ export const MAX_DIMENSION = 1600;
 /** Aim to stay under this; quality steps down until it fits. */
 export const TARGET_BYTES = 500 * 1024;
 /** Server rejects anything larger (see src/lib/images.ts). */
-export const MAX_UPLOAD_BYTES = 1.5 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 1.2 * 1024 * 1024;
 
 export type Compressed = { file: File; width: number; height: number; originalBytes: number };
 

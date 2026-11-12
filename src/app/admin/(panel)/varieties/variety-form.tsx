@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { deleteVariety, saveVariety } from "../../actions";
 import { ConfirmButton, FormMessage, ImageField, SubmitButton, Toggle, useFormAction } from "@/components/admin/form-bits";
-import type { BougainvilleaType, Variety } from "@/lib/schema";
+import { VARIETY_PHOTOS, type BougainvilleaType, type Variety } from "@/lib/schema";
 
 const COLOR_SUGGESTIONS = ["Magenta", "Crimson", "Pink", "Purple", "Orange", "Gold", "White", "Coral", "Lavender", "Bicolour"];
 
@@ -63,12 +63,27 @@ export function VarietyForm({ variety, types }: { variety?: Variety; types: Boug
           </div>
         </div>
 
-        <div className="card p-5 sm:p-6">
-          <ImageField name="imageUrl" fileName="imageFile" defaultValue={variety?.imageUrl} />
+        <div className="card space-y-6 p-5 sm:p-6">
+          <div>
+            <h2 className="font-medium text-stone-900">Photos</h2>
+            <p className="mt-0.5 text-sm text-stone-500">
+              All 3 are required to publish. Drafts can be saved with photos missing.
+            </p>
+          </div>
+          {VARIETY_PHOTOS.map((p, i) => (
+            <div key={p.field} className={i ? "border-t border-stone-100 pt-6" : ""}>
+              <ImageField
+                name={p.field}
+                fileName={`${p.field}File`}
+                defaultValue={variety?.[p.field]}
+                label={`${i + 1}. ${p.label} — ${p.hint.toLowerCase()}`}
+              />
+            </div>
+          ))}
         </div>
 
         <div className="card grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
-          <Toggle name="published" defaultChecked={variety?.published ?? true} label="Published" hint="Visible on the public website" />
+          <Toggle name="published" defaultChecked={variety?.published ?? true} label="Published" hint="Visible on the public website (needs all 3 photos)" />
           <Toggle name="featured" defaultChecked={variety?.featured} label="Featured" hint="Shown on the home page" />
         </div>
 

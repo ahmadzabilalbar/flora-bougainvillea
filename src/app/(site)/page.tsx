@@ -78,7 +78,7 @@ export default async function Home() {
                       }`}
                     >
                       <FlowerImage
-                        src={v?.imageUrl}
+                        src={v?.imageFlower || v?.imageUrl}
                         alt={v?.name ?? "Bougainvillea"}
                         color={v?.color ?? ["magenta", "gold", "purple"][i]}
                         priority

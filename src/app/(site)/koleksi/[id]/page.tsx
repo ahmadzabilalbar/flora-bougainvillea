@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FlowerImage } from "@/components/flower-image";
+import { VarietyGallery } from "@/components/variety-gallery";
 import { VarietyCard } from "@/components/variety-card";
 import { getContent, getTypes, getVarieties } from "@/lib/data";
+import { VARIETY_PHOTOS } from "@/lib/schema";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -31,9 +32,11 @@ export default async function VarietyPage({ params }: Props) {
         ← Balik ke koleksi
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-white shadow-xl shadow-bract-900/10">
-          <FlowerImage src={v.imageUrl} alt={v.name} color={v.color} priority sizes="(max-width: 1024px) 100vw, 50vw" />
-        </div>
+        <VarietyGallery
+          name={v.name}
+          color={v.color}
+          shots={VARIETY_PHOTOS.map((p) => ({ label: p.labelBm, src: v[p.field] }))}
+        />
         <div className="lg:py-8">
           {type && (
             <Link

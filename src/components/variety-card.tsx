@@ -10,13 +10,22 @@ export function VarietyCard({ v, typeName, priority }: { v: Variety; typeName?: 
     >
       <div className="relative aspect-[4/5] overflow-hidden">
         <FlowerImage
-          src={v.imageUrl}
+          src={v.imageUrl || v.imageFlower}
           alt={v.name}
           color={v.color}
           priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="transition duration-500 group-hover:scale-105"
         />
+        {v.imageUrl && v.imageFlower && (
+          <FlowerImage
+            src={v.imageFlower}
+            alt=""
+            color={v.color}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
+          />
+        )}
         {typeName && (
           <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-leaf-900 backdrop-blur">
             {typeName}

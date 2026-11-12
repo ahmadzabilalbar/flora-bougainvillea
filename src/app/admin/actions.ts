@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { DATA_TAG, getContent, getPages, getTypes, getVarieties } from "@/lib/data";
 import { deleteStoredImage, imageFromForm } from "@/lib/images";
-import { CONTENT_FIELDS } from "@/lib/schema";
+import { CONTENT_FIELDS, VARIETY_PHOTOS } from "@/lib/schema";
 import { store } from "@/lib/store";
 import { SAMPLE_PAGES, SAMPLE_TYPES, SAMPLE_VARIETIES } from "@/lib/sample-data";
 
@@ -25,9 +25,20 @@ function refresh() {
 async function cleanupImage(oldUrl: string | undefined, newUrl = "") {
   if (!oldUrl || oldUrl === newUrl) return;
   const [varieties, content] = await Promise.all([store.list("Varieties"), store.list("Content")]);
-  const inUse = varieties.some((v) => v.imageUrl === oldUrl) || content.some((c) => c.value === oldUrl);
+  const inUse =
+    varieties.some((v) => VARIETY_PHOTOS.some((p) => v[p.field] === oldUrl)) || content.some((c) => c.value === oldUrl);
   if (!inUse) await deleteStoredImage(oldUrl);
 }
+
+/** Which of the 3 required photos a submitted variety form is missing (file or URL counts). */
+function missingPhotos(fd: FormData) {
+  return VARIETY_PHOTOS.filter((p) => {
+    const file = fd.get(`${p.field}File`);
+    return !(file instanceof File && file.size > 0) && !str(fd, p.field, 2000);
+  });
+}
+
+const PUBLISH_RULE = "A published variety needs all 3 photos: whole plant, flower and leaves.";
 
 function fail(e: unknown): FormState {
   console.error(e);
@@ -60,14 +71,23 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
   const id = str(fd, "id", 50);
   const name = str(fd, "name", 120);
   if (!name) return { error: "Name is required." };
+  // Check before uploading anything, so a rejected save leaves no orphan files.
+  const missing = missingPhotos(fd);
+  if (fd.get("published") && missing.length) {
+    return {
+      error: `${PUBLISH_RULE} Missing: ${missing.map((p) => p.label.toLowerCase()).join(", ")}. Add them, or turn off Published to save as a draft.`,
+    };
+  }
   try {
-    const previous = id ? (await store.list("Varieties")).find((v) => v.id === id)?.imageUrl : undefined;
+    const previous = id ? (await store.list("Varieties")).find((v) => v.id === id) : undefined;
+    const photos: Record<string, string> = {};
+    for (const p of VARIETY_PHOTOS) photos[p.field] = await imageFromForm(fd, `${p.field}File`, p.field);
     const row = {
       name,
       typeId: str(fd, "typeId", 50),
       color: str(fd, "color", 60),
       description: str(fd, "description"),
-      imageUrl: await imageFromForm(fd, "imageFile", "imageUrl"),
+      ...photos,
       featured: fd.get("featured") ? "TRUE" : "FALSE",
       published: fd.get("published") ? "TRUE" : "FALSE",
       updatedAt: now(),
@@ -75,7 +95,7 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
     if (id) {
       const found = await store.update("Varieties", "id", id, row);
       if (!found) return { error: "This variety no longer exists." };
-      await cleanupImage(previous, row.imageUrl);
+      for (const p of VARIETY_PHOTOS) await cleanupImage(previous?.[p.field], photos[p.field]);
     } else {
       await store.insert("Varieties", { id: newId(), createdAt: now(), ...row });
     }
@@ -89,21 +109,24 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
 export async function deleteVariety(fd: FormData) {
   await requireAdmin();
   const id = str(fd, "id", 50);
-  const previous = (await store.list("Varieties")).find((v) => v.id === id)?.imageUrl;
+  const previous = (await store.list("Varieties")).find((v) => v.id === id);
   await store.remove("Varieties", "id", id);
-  await cleanupImage(previous);
+  for (const p of VARIETY_PHOTOS) await cleanupImage(previous?.[p.field]);
   refresh();
   redirect("/admin/varieties");
 }
 
-export async function toggleVarietyFlag(fd: FormData) {
+export async function toggleVarietyFlag(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin();
   const field = str(fd, "field", 20);
   if (field !== "featured" && field !== "published") return;
-  await store.update("Varieties", "id", str(fd, "id", 50), {
-    [field]: str(fd, "value", 5) === "true" ? "TRUE" : "FALSE",
-    updatedAt: now(),
-  });
+  const id = str(fd, "id", 50);
+  const on = str(fd, "value", 5) === "true";
+  if (field === "published" && on) {
+    const v = (await store.list("Varieties")).find((r) => r.id === id);
+    if (v && VARIETY_PHOTOS.some((p) => !v[p.field])) return { error: `${PUBLISH_RULE} Edit the variety to add them.` };
+  }
+  await store.update("Varieties", "id", id, { [field]: on ? "TRUE" : "FALSE", updatedAt: now() });
   refresh();
 }
 

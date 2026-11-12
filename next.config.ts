@@ -20,8 +20,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      // Images are compressed in the browser and capped at 1.5 MB server-side.
-      bodySizeLimit: "2mb",
+      // Images are compressed in the browser (~500 KB) and capped at 1.2 MB each; a variety saves up to 3.
+      bodySizeLimit: "4mb",
     },
   },
   turbopack: {

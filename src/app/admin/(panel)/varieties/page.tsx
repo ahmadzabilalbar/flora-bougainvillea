@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { toggleVarietyFlag } from "../../actions";
+import { FlagButton } from "./flag-button";
 import { VarietyFilters } from "./variety-filters";
 import { FlowerImage } from "@/components/flower-image";
 import { getTypes, getVarieties } from "@/lib/data";
+import { photoCount } from "@/lib/schema";
 
 export const metadata: Metadata = { title: "Varieties" };
 
@@ -54,6 +55,7 @@ export default async function VarietiesAdmin({
                     {typeName.get(v.typeId) ?? <span className="text-amber-600">No type</span>} · {v.color || "—"}
                   </div>
                 </Link>
+                <PhotoBadge count={photoCount(v)} />
                 <div className="hidden items-center gap-2 sm:flex">
                   <FlagButton id={v.id} field="featured" on={v.featured} labels={["★ Featured", "☆ Feature"]} />
                   <FlagButton id={v.id} field="published" on={v.published} labels={["Published", "Draft"]} />
@@ -74,34 +76,16 @@ export default async function VarietiesAdmin({
   );
 }
 
-function FlagButton({
-  id,
-  field,
-  on,
-  labels,
-}: {
-  id: string;
-  field: "featured" | "published";
-  on: boolean;
-  labels: [string, string];
-}) {
+function PhotoBadge({ count }: { count: number }) {
+  const done = count === 3;
   return (
-    <form action={toggleVarietyFlag}>
-      <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="field" value={field} />
-      <input type="hidden" name="value" value={String(!on)} />
-      <button
-        title={`Toggle ${field}`}
-        className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-          on
-            ? field === "featured"
-              ? "bg-amber-50 text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100"
-              : "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
-            : "bg-stone-100 text-stone-500 hover:bg-stone-200"
-        }`}
-      >
-        {on ? labels[0] : labels[1]}
-      </button>
-    </form>
+    <span
+      title="Whole plant, flower and leaf photos"
+      className={`hidden shrink-0 rounded-full px-2.5 py-1 text-xs font-medium md:inline ${
+        done ? "bg-stone-100 text-stone-600" : "bg-amber-50 text-amber-800 ring-1 ring-amber-200"
+      }`}
+    >
+      📷 {count}/3
+    </span>
   );
 }

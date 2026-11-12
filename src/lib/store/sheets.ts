@@ -62,6 +62,16 @@ async function readRaw(table: TableName): Promise<{ headers: string[]; values: s
   }
 }
 
+/** Reads a tab, first adding any header columns the app expects but the sheet lacks. */
+async function readForWrite(table: TableName) {
+  let raw = await readRaw(table);
+  if (!raw.headers.length || TABLES[table].some((h) => !raw.headers.includes(h))) {
+    await sheetsStore.ensureSchema();
+    raw = await readRaw(table);
+  }
+  return raw;
+}
+
 function toArray(headers: string[], row: Row) {
   return headers.map((h) => row[h] ?? "");
 }
@@ -108,11 +118,7 @@ export const sheetsStore: Store = {
   },
 
   async insert(table, row) {
-    let { headers } = await readRaw(table);
-    if (!headers.length) {
-      await this.ensureSchema();
-      headers = [...TABLES[table]];
-    }
+    const { headers } = await readForWrite(table);
     await api(`/values/${range(table, "A1")}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
       method: "POST",
       body: JSON.stringify({ values: [toArray(headers, row)] }),
@@ -120,7 +126,7 @@ export const sheetsStore: Store = {
   },
 
   async update(table, keyField, key, patch) {
-    const { headers, values } = await readRaw(table);
+    const { headers, values } = await readForWrite(table);
     const k = headers.indexOf(keyField);
     const idx = values.findIndex((r) => r[k] === key);
     if (idx === -1) return false;
@@ -135,11 +141,7 @@ export const sheetsStore: Store = {
   },
 
   async upsertMany(table, keyField, rows) {
-    const { headers, values } = await readRaw(table);
-    if (!headers.length) {
-      await this.ensureSchema();
-      return this.upsertMany(table, keyField, rows);
-    }
+    const { headers, values } = await readForWrite(table);
     const k = headers.indexOf(keyField);
     const data: { range: string; values: string[][] }[] = [];
     const toAppend: string[][] = [];

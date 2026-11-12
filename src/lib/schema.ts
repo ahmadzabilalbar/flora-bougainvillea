@@ -8,6 +8,8 @@ export const TABLES = {
     "color",
     "description",
     "imageUrl",
+    "imageFlower",
+    "imageLeaf",
     "featured",
     "published",
     "createdAt",
@@ -33,12 +35,28 @@ export type Variety = {
   typeId: string;
   color: string;
   description: string;
+  /** Whole-plant photo (main image). */
   imageUrl: string;
+  /** Flower close-up. */
+  imageFlower: string;
+  /** Leaf close-up. */
+  imageLeaf: string;
   featured: boolean;
   published: boolean;
   createdAt: string;
   updatedAt: string;
 };
+
+/** The three photos every published variety needs. */
+export const VARIETY_PHOTOS = [
+  { field: "imageUrl", label: "Whole plant", labelBm: "Pokok penuh", hint: "The full plant or bush" },
+  { field: "imageFlower", label: "Flower", labelBm: "Bunga", hint: "Close-up of the bracts" },
+  { field: "imageLeaf", label: "Leaves", labelBm: "Daun", hint: "Close-up of the foliage" },
+] as const;
+
+export type PhotoField = (typeof VARIETY_PHOTOS)[number]["field"];
+
+export const photoCount = (v: Pick<Variety, PhotoField>) => VARIETY_PHOTOS.filter((p) => v[p.field]).length;
 
 export type Page = {
   id: string;

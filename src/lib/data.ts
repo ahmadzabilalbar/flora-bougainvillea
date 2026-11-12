@@ -43,6 +43,8 @@ export const getVarieties = cached("varieties", async (): Promise<Variety[]> => 
       color: r.color ?? "",
       description: r.description ?? "",
       imageUrl: r.imageUrl ?? "",
+      imageFlower: r.imageFlower ?? "",
+      imageLeaf: r.imageLeaf ?? "",
       featured: bool(r.featured),
       published: bool(r.published, true),
       createdAt: r.createdAt ?? "",
