@@ -41,11 +41,11 @@ export default async function Home() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 text-pretty">{c.heroSubtitle}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/koleksi" className="btn-primary px-6 py-3 text-base">
-                Terokai koleksi
+                Tengok koleksi
               </Link>
               {show.about && (
                 <Link href="#about" className="btn-ghost px-6 py-3 text-base">
-                  Kisah kami
+                  Kisahnya
                 </Link>
               )}
             </div>
@@ -121,14 +121,14 @@ export default async function Home() {
         <section className="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Pilihan</p>
-              <h2 className="mt-2 font-display text-4xl text-leaf-900">Sedang berbunga musim ini</h2>
+              <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Kegemaran</p>
+              <h2 className="mt-2 font-display text-4xl text-leaf-900">Tengah mekar sekarang</h2>
             </div>
             <Link
               href="/koleksi"
               className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block"
             >
-              Lihat semua →
+              Tengok semua →
             </Link>
           </div>
           {featured.length ? (
@@ -139,7 +139,7 @@ export default async function Home() {
             </div>
           ) : (
             <p className="mt-8 rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
-              Koleksi sedang ditanam — sila kembali tidak lama lagi.
+              Koleksi tengah ditanam — singgah lagi nanti ya!
             </p>
           )}
         </section>
@@ -161,10 +161,10 @@ export default async function Home() {
       {/* Contact */}
       {show.contact && (
         <section id="contact" className="mx-auto mt-28 max-w-3xl scroll-mt-24 px-4 text-center sm:px-6">
-          <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Sapa kami</p>
-          <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Cari bunga idaman anda</h2>
+          <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Jom sembang</p>
+          <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Sama-sama minat bougainvillea?</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-stone-600">
-            Tanya tentang stok, saiz atau gubahan khas — kami sedia membantu.
+            Nak tanya tips jaga pokok, kongsi gambar bunga atau sekadar bersembang? Mesej je — seronok jumpa sesama peminat.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {c.whatsapp && (
@@ -174,7 +174,7 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="btn-primary px-6 py-3 text-base"
               >
-                Sembang di WhatsApp
+                Mesej di WhatsApp
               </a>
             )}
             {c.contactEmail && (

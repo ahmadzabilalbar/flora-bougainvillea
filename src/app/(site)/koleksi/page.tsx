@@ -10,7 +10,7 @@ export default async function CollectionPage({ searchParams }: { searchParams: P
   return (
     <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 md:pt-16">
       <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Koleksi</p>
-      <h1 className="mt-2 font-display text-5xl text-leaf-900 sm:text-6xl">Setiap warna dari tropika</h1>
+      <h1 className="mt-2 font-display text-5xl text-leaf-900 sm:text-6xl">Semua warna yang ada di laman</h1>
       <CollectionBrowser
         key={type ?? "all"}
         types={types}

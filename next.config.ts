@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       { source: "/collection", destination: "/koleksi", permanent: true },
       { source: "/collection/:id", destination: "/koleksi/:id", permanent: true },
       { source: "/pages/:slug", destination: "/halaman/:slug", permanent: true },
+      // Sample "ordering" page was replaced by the hobby story page.
+      { source: "/halaman/tempahan", destination: "/halaman/kisah", permanent: true },
     ];
   },
   images: {

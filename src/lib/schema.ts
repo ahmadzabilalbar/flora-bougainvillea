@@ -53,29 +53,29 @@ export type Page = {
 // Editable site content (the "CMS" key/value store).
 export const CONTENT_FIELDS = [
   { key: "siteName", label: "Site name", type: "text", default: "Flora Bougainvillea" },
-  { key: "tagline", label: "Tagline", type: "text", default: "Bunga kertas, jiwa tropika." },
-  { key: "heroTitle", label: "Hero title", type: "text", default: "Palet warna bougainvillea yang hidup" },
+  { key: "tagline", label: "Tagline", type: "text", default: "Bunga kertas, hobi yang tak pernah jemu." },
+  { key: "heroTitle", label: "Hero title", type: "text", default: "Warna-warni bougainvillea, dari laman sendiri" },
   {
     key: "heroSubtitle",
     label: "Hero subtitle",
     type: "textarea",
     default:
-      "Terokai koleksi varieti bougainvillea pilihan kami — daripada pokok memanjat magenta yang menyala hingga varieti kerdil dwiwarna yang halus, ditanam dengan teliti di bumi tropika.",
+      "Koleksi peribadi seorang peminat bougainvillea. Jom tengok varieti yang ada — dari yang memanjat tinggi sampailah yang comel kerdil dalam pasu.",
   },
   { key: "heroImage", label: "Hero image URL", type: "image", default: "" },
-  { key: "aboutTitle", label: "About title", type: "text", default: "Ditanam dengan penuh kesabaran" },
+  { key: "aboutTitle", label: "About title", type: "text", default: "Bukan nurseri, cuma minat" },
   {
     key: "aboutBody",
     label: "About text",
     type: "textarea",
     default:
-      "Kami ialah tapak semaian kecil yang khusus untuk bougainvillea. Setiap pokok dibiak, dibentuk dan dikeraskan di bawah cahaya matahari penuh supaya ia subur di taman, balkoni atau pasu bonsai anda.",
+      "Semuanya bermula dengan satu pasu kecil. Lama-lama, laman pun dah penuh dengan warna! Laman web ni sekadar tempat simpan dan kongsi koleksi. Kalau anda pun minat bougainvillea, jom sembang dan tukar-tukar tips.",
   },
   { key: "contactEmail", label: "Contact email", type: "text", default: "hello@example.com" },
   { key: "contactPhone", label: "Contact phone", type: "text", default: "" },
   { key: "whatsapp", label: "WhatsApp number (digits only, with country code)", type: "text", default: "" },
   { key: "address", label: "Address", type: "textarea", default: "" },
-  { key: "footerText", label: "Footer text", type: "text", default: "Tumbuh di bawah mentari, dikongsi dengan kasih." },
+  { key: "footerText", label: "Footer text", type: "text", default: "Ditanam sebab minat, dikongsi sebab seronok." },
   { key: "showTypes", label: "Show types strip", type: "toggle", default: "true" },
   { key: "showFeatured", label: "Show featured varieties", type: "toggle", default: "true" },
   { key: "showAbout", label: "Show about section", type: "toggle", default: "true" },

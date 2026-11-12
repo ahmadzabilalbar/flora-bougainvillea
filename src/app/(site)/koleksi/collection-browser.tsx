@@ -78,7 +78,7 @@ export function CollectionBrowser({
         </div>
       ) : (
         <p className="mt-10 rounded-3xl border border-dashed border-stone-300 p-12 text-center text-stone-500">
-          Tiada varieti yang sepadan dengan carian anda.
+          Alamak, tak jumpa varieti tu. Cuba cari yang lain?
         </p>
       )}
     </>

@@ -23,12 +23,12 @@ export default async function VarietyPage({ params }: Props) {
   if (!v) notFound();
   const type = types.find((t) => t.id === v.typeId);
   const related = all.filter((x) => x.published && x.id !== v.id && x.typeId === v.typeId).slice(0, 4);
-  const enquiry = encodeURIComponent(`Hai! Saya berminat dengan bougainvillea "${v.name}".`);
+  const enquiry = encodeURIComponent(`Hai! Saya pun minat bougainvillea "${v.name}". Boleh kongsi tips jaga?`);
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
       <Link href="/koleksi" className="text-sm text-stone-500 hover:text-stone-900">
-        ← Kembali ke koleksi
+        ← Balik ke koleksi
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-white shadow-xl shadow-bract-900/10">
@@ -66,7 +66,7 @@ export default async function VarietyPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="btn-primary px-6 py-3 text-base"
               >
-                Tanya melalui WhatsApp
+                Sembang pasal varieti ni
               </a>
             )}
             {c.contactEmail && (
@@ -74,7 +74,7 @@ export default async function VarietyPage({ params }: Props) {
                 href={`mailto:${c.contactEmail}?subject=${encodeURIComponent(v.name)}&body=${enquiry}`}
                 className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}
               >
-                Tanya melalui e-mel
+                Hantar e-mel
               </a>
             )}
           </div>
@@ -83,7 +83,7 @@ export default async function VarietyPage({ params }: Props) {
 
       {related.length > 0 && (
         <section className="mt-24">
-          <h2 className="font-display text-3xl text-leaf-900">{type ? `Lagi dari ${type.name}` : "Varieti lain"}</h2>
+          <h2 className="font-display text-3xl text-leaf-900">{type ? `Lagi ${type.name} dalam koleksi` : "Varieti lain"}</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((r) => (
               <VarietyCard key={r.id} v={r} typeName={type?.name} />

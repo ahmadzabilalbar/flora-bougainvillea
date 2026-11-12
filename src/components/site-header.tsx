@@ -54,7 +54,7 @@ export function SiteHeader({
           ))}
           {showContact && (
             <Link href="/#contact" className="btn-primary ml-2">
-              Hubungi kami
+              Jom sembang
             </Link>
           )}
         </nav>
@@ -87,7 +87,7 @@ export function SiteHeader({
           ))}
           {showContact && (
             <Link href="/#contact" className="btn-primary mt-3 w-full">
-              Hubungi kami
+              Jom sembang
             </Link>
           )}
         </nav>

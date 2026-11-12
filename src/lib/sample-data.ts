@@ -32,37 +32,42 @@ export const SAMPLE_PAGES = [
   {
     id: "panduan-penjagaan",
     slug: "panduan-penjagaan",
-    title: "Panduan Penjagaan",
+    title: "Tips Penjagaan",
     published: "TRUE",
     sort: "1",
-    body: `Bougainvillea paling gembira apabila dijaga dengan sedikit "keras".
+    body: `Bougainvillea ni sebenarnya suka dijaga "kasar" sikit. Makin dimanja, makin malas dia berbunga!
 
 ## Cahaya matahari
-Berikan sekurang-kurangnya 6 jam cahaya matahari terus setiap hari. Lebih banyak cahaya, lebih banyak warna.
+Bagi sekurang-kurangnya 6 jam panas terus sehari. Lagi banyak matahari, lagi banyak warna.
 
-## Penyiraman
-- Siram dengan banyak, kemudian biarkan tanah kering sebelum disiram semula.
-- Sedikit tekanan kemarau menggalakkan pembungaan.
-- Jangan biarkan pasu bertakung air.
+## Siram
+- Siram puas-puas, lepas tu biar tanah kering dulu sebelum siram lagi.
+- Kering sikit sebenarnya bagus — dia "terkejut" dan mula berbunga.
+- Jangan biar pasu bertakung air, akar mudah reput.
 
-## Pembajaan
-Gunakan baja rendah nitrogen dan tinggi kalium setiap 3–4 minggu semasa musim pertumbuhan.
+## Baja
+Guna baja rendah nitrogen, tinggi kalium (yang untuk bunga) setiap 3–4 minggu masa musim tumbuh.
 
-## Pemangkasan
-Pangkas sedikit selepas setiap kali berbunga. Brakta tumbuh pada dahan baharu, jadi pemangkasan membantu pokok terus berbunga.`,
+## Cantas
+Cantas sikit lepas setiap kali habis berbunga. Bunga keluar dari dahan baru, jadi lepas cantas biasanya dia akan mekar lagi.`,
   },
   {
-    id: "tempahan",
-    slug: "tempahan",
-    title: "Tempahan & Penghantaran",
+    id: "kisah",
+    slug: "kisah",
+    title: "Kisah Koleksi Ni",
     published: "TRUE",
     sort: "2",
-    body: `Setiap pokok ditanam di tapak semaian kami dan setiap tempahan disediakan dengan tangan.
+    body: `Ini bukan kedai dan bukan nurseri — cuma koleksi peribadi seorang peminat bougainvillea.
 
-## Cara menempah
-Hubungi kami melalui WhatsApp atau e-mel dengan varieti dan saiz yang anda mahu. Kami akan membalas dengan maklumat stok dan sebut harga.
+## Macam mana bermula
+Semuanya bermula dengan satu pasu kecil yang dibeli suka-suka. Bila tengok dia mekar penuh warna, terus jatuh hati. Sekarang dah jadi hobi hujung minggu!
 
-## Penghantaran
-Penghantaran tempatan tersedia hampir setiap hari. Pokok disiram dan dibalut sebelum meninggalkan tapak semaian.`,
+## Kenapa ada laman web ni
+- Tempat simpan rekod varieti yang ada dalam koleksi.
+- Kongsi gambar dan tips dengan kawan-kawan yang sama minat.
+- Belajar daripada pengalaman peminat lain.
+
+## Jom berkawan
+Kalau anda pun minat bougainvillea, jangan segan nak tegur. Seronok bertukar cerita, tips dan gambar bunga!`,
   },
 ];
