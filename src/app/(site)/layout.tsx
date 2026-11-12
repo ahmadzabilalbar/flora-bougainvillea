@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo, SiteHeader } from "@/components/site-header";
 import { getContent, getPages, safe } from "@/lib/data";
-import { CONTENT_FIELDS, type SiteContent } from "@/lib/schema";
+import { CONTENT_FIELDS, isOn, type SiteContent } from "@/lib/schema";
 
 const defaults = Object.fromEntries(CONTENT_FIELDS.map((f) => [f.key, f.default])) as SiteContent;
 
@@ -16,7 +16,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <SiteHeader siteName={c.siteName} links={links} />
+      <SiteHeader siteName={c.siteName} links={links} showContact={isOn(c.showContact)} />
       <main className="flex-1">{children}</main>
       <footer className="mt-24 bg-leaf-900 text-leaf-100">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">

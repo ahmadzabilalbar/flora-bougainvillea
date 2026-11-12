@@ -35,7 +35,7 @@ export function SetupPanel({ sheetsConfigured, sheetId }: { sheetsConfigured: bo
       <form action={action} className="mt-4 space-y-3">
         <label className="flex items-center gap-2 text-sm text-stone-700">
           <input type="checkbox" name="seed" className="size-4 accent-bract-600" />
-          Add sample data to empty tables
+          Add sample data (skips items that already exist)
         </label>
         <FormMessage state={state} />
         <SubmitButton pendingLabel="Running…" className="btn-dark w-full">

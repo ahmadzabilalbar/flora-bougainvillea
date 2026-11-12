@@ -1,10 +1,11 @@
 "use client";
 
 import { saveContent } from "../../actions";
-import { FormMessage, ImageField, SubmitButton, useFormAction } from "@/components/admin/form-bits";
-import { CONTENT_FIELDS, type ContentKey, type SiteContent } from "@/lib/schema";
+import { FormMessage, ImageField, SubmitButton, Toggle, useFormAction } from "@/components/admin/form-bits";
+import { CONTENT_FIELDS, isOn, type ContentKey, type SiteContent } from "@/lib/schema";
 
 const SECTIONS: { title: string; keys: ContentKey[] }[] = [
+  { title: "Home — sections", keys: ["showTypes", "showFeatured", "showAbout", "showContact"] },
   { title: "Brand", keys: ["siteName", "tagline", "footerText"] },
   { title: "Home — hero", keys: ["heroTitle", "heroSubtitle", "heroImage"] },
   { title: "Home — about", keys: ["aboutTitle", "aboutBody"] },
@@ -23,6 +24,8 @@ export function ContentForm({ content }: { content: SiteContent }) {
           <h2 className="font-medium text-stone-900">{s.title}</h2>
           {s.keys.map((k) => {
             const f = field(k);
+            if (f.type === "toggle")
+              return <Toggle key={k} name={k} defaultChecked={isOn(content[k])} label={f.label} />;
             if (f.type === "image")
               return <ImageField key={k} name={k} fileName={`${k}File`} defaultValue={content[k]} label={f.label} />;
             return (

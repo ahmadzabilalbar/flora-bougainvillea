@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 export function SiteHeader({
   siteName,
   links,
+  showContact = true,
 }: {
   siteName: string;
   links: { href: string; label: string }[];
+  showContact?: boolean;
 }) {
   const pathname = usePathname();
   // The menu is "open for a path", so it closes automatically after navigating.
@@ -50,9 +52,11 @@ export function SiteHeader({
               {l.label}
             </Link>
           ))}
-          <Link href="/#contact" className="btn-primary ml-2">
-            Hubungi kami
-          </Link>
+          {showContact && (
+            <Link href="/#contact" className="btn-primary ml-2">
+              Hubungi kami
+            </Link>
+          )}
         </nav>
 
         <button
@@ -81,9 +85,11 @@ export function SiteHeader({
               {l.label}
             </Link>
           ))}
-          <Link href="/#contact" className="btn-primary mt-3 w-full">
-            Hubungi kami
-          </Link>
+          {showContact && (
+            <Link href="/#contact" className="btn-primary mt-3 w-full">
+              Hubungi kami
+            </Link>
+          )}
         </nav>
       )}
     </header>

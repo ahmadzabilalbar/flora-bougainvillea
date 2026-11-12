@@ -138,7 +138,11 @@ export async function saveContent(_: FormState, fd: FormData): Promise<FormState
     const rows = [];
     for (const f of CONTENT_FIELDS) {
       const value =
-        f.type === "image" ? await imageFromForm(fd, `${f.key}File`, f.key) : str(fd, f.key, 5000);
+        f.type === "image"
+          ? await imageFromForm(fd, `${f.key}File`, f.key)
+          : f.type === "toggle"
+            ? fd.get(f.key) ? "true" : "false"
+            : str(fd, f.key, 5000);
       rows.push({ key: f.key, value });
     }
     await store.upsertMany("Content", "key", rows);
@@ -205,24 +209,30 @@ export async function setupStore(_: FormState, fd: FormData): Promise<FormState>
         getPages(),
         getContent(),
       ]);
-      if (!types.length) await store.upsertMany("Types", "id", SAMPLE_TYPES);
-      if (!varieties.length)
+      // Add any sample rows whose id doesn't exist yet (never overwrites existing rows).
+      const missing = <T extends { id: string }>(sample: T[], existing: { id: string }[]) =>
+        sample.filter((r) => !existing.some((e) => e.id === r.id));
+      const newTypes = missing(SAMPLE_TYPES, types);
+      const newVarieties = missing(SAMPLE_VARIETIES, varieties);
+      const newPages = missing(SAMPLE_PAGES, pages);
+      if (newTypes.length) await store.upsertMany("Types", "id", newTypes);
+      if (newVarieties.length)
         await store.upsertMany(
           "Varieties",
           "id",
-          SAMPLE_VARIETIES.map((v, i) => ({
+          newVarieties.map((v, i) => ({
             ...v,
             createdAt: new Date(Date.now() - i * 60000).toISOString(),
             updatedAt: now(),
           })),
         );
-      if (!pages.length) await store.upsertMany("Pages", "id", SAMPLE_PAGES.map((p) => ({ ...p, updatedAt: now() })));
+      if (newPages.length) await store.upsertMany("Pages", "id", newPages.map((p) => ({ ...p, updatedAt: now() })));
       await store.upsertMany(
         "Content",
         "key",
         CONTENT_FIELDS.map((f) => ({ key: f.key, value: content[f.key] })),
       );
-      seeded = " Sample data added where tables were empty.";
+      seeded = ` Sample data added: ${newTypes.length} types, ${newVarieties.length} varieties, ${newPages.length} pages.`;
     }
     refresh();
     return {

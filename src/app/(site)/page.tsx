@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FlowerImage } from "@/components/flower-image";
 import { VarietyCard } from "@/components/variety-card";
 import { getContent, getTypes, getVarieties, safe } from "@/lib/data";
-import { CONTENT_FIELDS, type SiteContent } from "@/lib/schema";
+import { CONTENT_FIELDS, isOn, type SiteContent } from "@/lib/schema";
 
 const defaults = Object.fromEntries(CONTENT_FIELDS.map((f) => [f.key, f.default])) as SiteContent;
 
@@ -16,6 +16,12 @@ export default async function Home() {
   const featured = (varieties.some((v) => v.featured) ? varieties.filter((v) => v.featured) : varieties).slice(0, 8);
   const typeName = new Map(types.map((t) => [t.id, t.name]));
   const collage = varieties.slice(0, 3);
+  const show = {
+    types: isOn(c.showTypes),
+    featured: isOn(c.showFeatured),
+    about: isOn(c.showAbout),
+    contact: isOn(c.showContact),
+  };
 
   return (
     <>
@@ -37,9 +43,11 @@ export default async function Home() {
               <Link href="/collection" className="btn-primary px-6 py-3 text-base">
                 Terokai koleksi
               </Link>
-              <Link href="#about" className="btn-ghost px-6 py-3 text-base">
-                Kisah kami
-              </Link>
+              {show.about && (
+                <Link href="#about" className="btn-ghost px-6 py-3 text-base">
+                  Kisah kami
+                </Link>
+              )}
             </div>
             <dl className="mt-12 flex gap-10">
               <div>
@@ -86,7 +94,7 @@ export default async function Home() {
       </section>
 
       {/* Types */}
-      {types.length > 0 && (
+      {show.types && types.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none]">
             {types.map((t) => (
@@ -109,70 +117,82 @@ export default async function Home() {
       )}
 
       {/* Featured */}
-      <section className="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Pilihan</p>
-            <h2 className="mt-2 font-display text-4xl text-leaf-900">Sedang berbunga musim ini</h2>
+      {show.featured && (
+        <section className="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Pilihan</p>
+              <h2 className="mt-2 font-display text-4xl text-leaf-900">Sedang berbunga musim ini</h2>
+            </div>
+            <Link
+              href="/collection"
+              className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block"
+            >
+              Lihat semua →
+            </Link>
           </div>
-          <Link href="/collection" className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block">
-            Lihat semua →
-          </Link>
-        </div>
-        {featured.length ? (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((v, i) => (
-              <VarietyCard key={v.id} v={v} typeName={typeName.get(v.typeId)} priority={i < 4} />
-            ))}
-          </div>
-        ) : (
-          <p className="mt-8 rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
-            Koleksi sedang ditanam — sila kembali tidak lama lagi.
-          </p>
-        )}
-      </section>
+          {featured.length ? (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featured.map((v, i) => (
+                <VarietyCard key={v.id} v={v} typeName={typeName.get(v.typeId)} priority={i < 4} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-8 rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
+              Koleksi sedang ditanam — sila kembali tidak lama lagi.
+            </p>
+          )}
+        </section>
+      )}
 
       {/* About */}
-      <section id="about" className="mx-auto mt-28 max-w-6xl scroll-mt-24 px-4 sm:px-6">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-leaf-900 px-6 py-16 text-white sm:px-14">
-          <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full bg-bract-500/30 blur-3xl" />
-          <div className="relative grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-            <h2 className="font-display text-4xl leading-tight text-balance sm:text-5xl">{c.aboutTitle}</h2>
-            <p className="whitespace-pre-line text-lg leading-relaxed text-leaf-100/85">{c.aboutBody}</p>
+      {show.about && (
+        <section id="about" className="mx-auto mt-28 max-w-6xl scroll-mt-24 px-4 sm:px-6">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-leaf-900 px-6 py-16 text-white sm:px-14">
+            <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full bg-bract-500/30 blur-3xl" />
+            <div className="relative grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+              <h2 className="font-display text-4xl leading-tight text-balance sm:text-5xl">{c.aboutTitle}</h2>
+              <p className="whitespace-pre-line text-lg leading-relaxed text-leaf-100/85">{c.aboutBody}</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Contact */}
-      <section id="contact" className="mx-auto mt-28 max-w-3xl scroll-mt-24 px-4 text-center sm:px-6">
-        <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Sapa kami</p>
-        <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Cari bunga idaman anda</h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-stone-600">
-          Tanya tentang stok, saiz atau gubahan khas — kami sedia membantu.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          {c.whatsapp && (
-            <a
-              href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary px-6 py-3 text-base"
-            >
-              Sembang di WhatsApp
-            </a>
-          )}
-          {c.contactEmail && (
-            <a href={`mailto:${c.contactEmail}`} className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}>
-              {c.contactEmail}
-            </a>
-          )}
-          {c.contactPhone && (
-            <a href={`tel:${c.contactPhone.replace(/[^\d+]/g, "")}`} className="btn-ghost px-6 py-3 text-base">
-              {c.contactPhone}
-            </a>
-          )}
-        </div>
-      </section>
+      {show.contact && (
+        <section id="contact" className="mx-auto mt-28 max-w-3xl scroll-mt-24 px-4 text-center sm:px-6">
+          <p className="text-sm font-medium uppercase tracking-widest text-bract-600">Sapa kami</p>
+          <h2 className="mt-2 font-display text-4xl text-leaf-900 sm:text-5xl">Cari bunga idaman anda</h2>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-stone-600">
+            Tanya tentang stok, saiz atau gubahan khas — kami sedia membantu.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {c.whatsapp && (
+              <a
+                href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary px-6 py-3 text-base"
+              >
+                Sembang di WhatsApp
+              </a>
+            )}
+            {c.contactEmail && (
+              <a
+                href={`mailto:${c.contactEmail}`}
+                className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}
+              >
+                {c.contactEmail}
+              </a>
+            )}
+            {c.contactPhone && (
+              <a href={`tel:${c.contactPhone.replace(/[^\d+]/g, "")}`} className="btn-ghost px-6 py-3 text-base">
+                {c.contactPhone}
+              </a>
+            )}
+          </div>
+        </section>
+      )}
     </>
   );
 }

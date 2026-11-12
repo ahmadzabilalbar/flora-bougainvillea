@@ -16,6 +16,16 @@ export const SAMPLE_VARIETIES = [
   { id: "singapore-white", name: "Singapore White", typeId: "glabra", color: "Putih", description: "Brakta putih bersih yang bertukar kemerahan lembut apabila matang. Anggun berlatarkan dinding gelap.", imageUrl: "", featured: "FALSE", published: "TRUE" },
   { id: "double-pink", name: "Double Pink", typeId: "double", color: "Merah jambu", description: "Brakta berganda yang lebat dan beralun, kekal pada dahan selama berminggu-minggu.", imageUrl: "", featured: "FALSE", published: "TRUE" },
   { id: "sundown-orange", name: "Sundown Orange", typeId: "buttiana", color: "Jingga", description: "Brakta jingga yang bertukar menjadi merah jambu koral, memberikan kesan dua warna pada satu pokok.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "vera-deep-purple", name: "Vera Deep Purple", typeId: "glabra", color: "Ungu", description: "Brakta ungu gelap yang berkilat dan berbunga hampir sepanjang tahun. Sangat sesuai untuk pagar hidup yang padat.", imageUrl: "", featured: "TRUE", published: "TRUE" },
+  { id: "rosenka", name: "Rosenka", typeId: "buttiana", color: "Emas", description: "Brakta keemasan yang perlahan-lahan bertukar menjadi merah jambu lembut. Satu pokok, pelbagai warna.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "raspberry-ice", name: "Raspberry Ice", typeId: "variegated", color: "Merah", description: "Daun varigata bertepi krim dengan brakta merah raspberi yang terang. Sesuai untuk bakul gantung.", imageUrl: "", featured: "TRUE", published: "TRUE" },
+  { id: "pixie-pink", name: "Pixie Pink", typeId: "dwarf", color: "Merah jambu", description: "Varieti kerdil berdaun kecil dengan dahan yang rapat, kegemaran peminat bonsai.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "mahara-orange", name: "Mahara Orange", typeId: "double", color: "Jingga", description: "Brakta berganda berwarna jingga tembaga yang lebat seperti jambak bunga kertas.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "mahara-white", name: "Mahara White", typeId: "double", color: "Putih", description: "Gugusan brakta berganda putih bersih yang tampak mewah di taman moden.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "elizabeth-angus", name: "Elizabeth Angus", typeId: "glabra", color: "Magenta", description: "Brakta magenta besar yang menyala dan sangat tahan panas. Pilihan utama untuk pergola.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "helen-johnson", name: "Helen Johnson", typeId: "dwarf", color: "Magenta", description: "Varieti kerdil yang rendang dengan brakta magenta-merah jambu, sesuai ditanam dalam pasu di beranda.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "golden-glow", name: "Golden Glow", typeId: "buttiana", color: "Kuning", description: "Brakta kuning keemasan yang ceria dan jarang ditemui. Mencerahkan sudut taman yang suram.", imageUrl: "", featured: "FALSE", published: "TRUE" },
+  { id: "lavender-queen", name: "Lavender Queen", typeId: "variegated", color: "Lavender", description: "Brakta ungu lavender yang lembut di atas daun varigata hijau-krim. Tenang dan anggun.", imageUrl: "", featured: "FALSE", published: "TRUE" },
 ];
 
 export const SAMPLE_PAGES = [
