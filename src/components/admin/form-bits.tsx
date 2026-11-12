@@ -3,6 +3,7 @@
 import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from "react";
 import { useFormStatus } from "react-dom";
 import type { FormState } from "@/app/admin/actions";
+import { MAX_DIMENSION, compressImage, formatBytes } from "@/lib/compress-image";
 
 /**
  * useActionState wired through onSubmit, so React doesn't reset the form's fields
@@ -73,11 +74,42 @@ export function ImageField({
 }) {
   const [url, setUrl] = useState(defaultValue);
   const [preview, setPreview] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ busy?: boolean; info?: string; error?: string }>({});
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
   const shown = preview ?? url;
+
+  const reset = () => {
+    setPreview(null);
+    if (fileRef.current) {
+      fileRef.current.value = "";
+      fileRef.current.setCustomValidity("");
+    }
+  };
+
+  // Resize/compress in the browser, then swap the optimised file into the input.
+  const onPick = async (input: HTMLInputElement) => {
+    const original = input.files?.[0];
+    if (!original) return reset();
+    setStatus({ busy: true });
+    input.setCustomValidity("Please wait — the image is still being optimised.");
+    try {
+      const out = await compressImage(original);
+      const dt = new DataTransfer();
+      dt.items.add(out.file);
+      input.files = dt.files;
+      input.setCustomValidity("");
+      setPreview(URL.createObjectURL(out.file));
+      setStatus({
+        info: `Optimised ${formatBytes(out.originalBytes)} → ${formatBytes(out.file.size)} · ${out.width}×${out.height}px`,
+      });
+    } catch (e) {
+      reset();
+      setStatus({ error: e instanceof Error ? e.message : "Couldn't process this image." });
+    }
+  };
 
   return (
     <div>
@@ -97,21 +129,26 @@ export function ImageField({
               <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
             </svg>
             <span className="mt-2 text-sm font-medium text-stone-800">
-              {preview ? "Change selected image" : "Upload an image"}
+              {status.busy ? "Optimising image…" : preview ? "Change selected image" : "Upload an image"}
             </span>
-            <span className="text-xs text-stone-500">JPG, PNG, WebP · max 4 MB</span>
+            <span className="text-xs text-stone-500">
+              JPG, PNG, WebP · auto-resized to {MAX_DIMENSION}px for web &amp; phone
+            </span>
             <input
               ref={fileRef}
               type="file"
               name={fileName}
               accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
               className="sr-only"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                setPreview(f ? URL.createObjectURL(f) : null);
-              }}
+              onChange={(e) => onPick(e.currentTarget)}
             />
           </label>
+          {status.info && <p className="text-xs text-leaf-700">✓ {status.info}</p>}
+          {status.error && (
+            <p role="alert" className="text-xs text-red-700">
+              {status.error}
+            </p>
+          )}
           <div className="flex items-center gap-3 text-xs text-stone-400">
             <span className="h-px flex-1 bg-stone-200" /> or paste a URL <span className="h-px flex-1 bg-stone-200" />
           </div>
@@ -130,8 +167,8 @@ export function ImageField({
                 className="btn-ghost shrink-0"
                 onClick={() => {
                   setUrl("");
-                  setPreview(null);
-                  if (fileRef.current) fileRef.current.value = "";
+                  reset();
+                  setStatus({});
                 }}
               >
                 Clear

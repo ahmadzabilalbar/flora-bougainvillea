@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      // Image uploads go through Server Actions (Vercel caps request bodies at ~4.5 MB).
-      bodySizeLimit: "4.5mb",
+      // Images are compressed in the browser and capped at 1.5 MB server-side.
+      bodySizeLimit: "2mb",
     },
   },
   turbopack: {

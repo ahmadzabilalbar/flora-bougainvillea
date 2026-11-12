@@ -3,7 +3,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 
-const MAX_BYTES = 4 * 1024 * 1024; // Vercel functions accept ~4.5 MB request bodies
+// The admin compresses images in the browser first (src/lib/compress-image.ts); this is the hard cap.
+const MAX_BYTES = 1.5 * 1024 * 1024;
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
 
 export function isValidImageUrl(url: string) {
@@ -17,7 +18,7 @@ export function isValidImageUrl(url: string) {
  */
 export async function saveUpload(file: File): Promise<string> {
   if (!ALLOWED.includes(file.type)) throw new Error("Image must be JPG, PNG, WebP, GIF or AVIF.");
-  if (file.size > MAX_BYTES) throw new Error("Image must be 4 MB or smaller.");
+  if (file.size > MAX_BYTES) throw new Error("Image is too large (max 1.5 MB). Please choose a smaller photo.");
 
   const ext = file.type.split("/")[1].replace("jpeg", "jpg");
   const name = `${randomUUID()}.${ext}`;
@@ -41,6 +42,28 @@ export async function saveUpload(file: File): Promise<string> {
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(path.join(dir, name), Buffer.from(await file.arrayBuffer()));
   return `/uploads/${name}`;
+}
+
+const isBlobUrl = (url: string) => {
+  try {
+    return new URL(url).hostname.endsWith(".public.blob.vercel-storage.com");
+  } catch {
+    return false;
+  }
+};
+
+/** Deletes an image this app stored (Vercel Blob or dev /uploads). External URLs are left alone. */
+export async function deleteStoredImage(url: string) {
+  try {
+    if (isBlobUrl(url) && process.env.BLOB_READ_WRITE_TOKEN) {
+      const { del } = await import("@vercel/blob");
+      await del(url);
+    } else if (/^\/uploads\/[\w.-]+$/.test(url)) {
+      await fs.unlink(path.join(process.cwd(), "public", url));
+    }
+  } catch (e) {
+    console.error("Couldn't delete old image", url, e); // never block the save
+  }
 }
 
 /** Resolves the final image URL from a form: an uploaded file wins over a pasted URL. */

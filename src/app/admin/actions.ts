@@ -5,7 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { DATA_TAG, getContent, getPages, getTypes, getVarieties } from "@/lib/data";
-import { imageFromForm } from "@/lib/images";
+import { deleteStoredImage, imageFromForm } from "@/lib/images";
 import { CONTENT_FIELDS } from "@/lib/schema";
 import { store } from "@/lib/store";
 import { SAMPLE_PAGES, SAMPLE_TYPES, SAMPLE_VARIETIES } from "@/lib/sample-data";
@@ -19,6 +19,14 @@ const now = () => new Date().toISOString();
 function refresh() {
   updateTag(DATA_TAG);
   revalidatePath("/", "layout");
+}
+
+/** Deletes `oldUrl` from storage if it changed and nothing else still uses it. */
+async function cleanupImage(oldUrl: string | undefined, newUrl = "") {
+  if (!oldUrl || oldUrl === newUrl) return;
+  const [varieties, content] = await Promise.all([store.list("Varieties"), store.list("Content")]);
+  const inUse = varieties.some((v) => v.imageUrl === oldUrl) || content.some((c) => c.value === oldUrl);
+  if (!inUse) await deleteStoredImage(oldUrl);
 }
 
 function fail(e: unknown): FormState {
@@ -53,6 +61,7 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
   const name = str(fd, "name", 120);
   if (!name) return { error: "Name is required." };
   try {
+    const previous = id ? (await store.list("Varieties")).find((v) => v.id === id)?.imageUrl : undefined;
     const row = {
       name,
       typeId: str(fd, "typeId", 50),
@@ -66,6 +75,7 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
     if (id) {
       const found = await store.update("Varieties", "id", id, row);
       if (!found) return { error: "This variety no longer exists." };
+      await cleanupImage(previous, row.imageUrl);
     } else {
       await store.insert("Varieties", { id: newId(), createdAt: now(), ...row });
     }
@@ -78,7 +88,10 @@ export async function saveVariety(_: FormState, fd: FormData): Promise<FormState
 
 export async function deleteVariety(fd: FormData) {
   await requireAdmin();
-  await store.remove("Varieties", "id", str(fd, "id", 50));
+  const id = str(fd, "id", 50);
+  const previous = (await store.list("Varieties")).find((v) => v.id === id)?.imageUrl;
+  await store.remove("Varieties", "id", id);
+  await cleanupImage(previous);
   refresh();
   redirect("/admin/varieties");
 }
@@ -135,6 +148,7 @@ export async function deleteType(_: FormState, fd: FormData): Promise<FormState>
 export async function saveContent(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin();
   try {
+    const before = new Map((await store.list("Content")).map((r) => [r.key, r.value]));
     const rows = [];
     for (const f of CONTENT_FIELDS) {
       const value =
@@ -146,6 +160,9 @@ export async function saveContent(_: FormState, fd: FormData): Promise<FormState
       rows.push({ key: f.key, value });
     }
     await store.upsertMany("Content", "key", rows);
+    for (const f of CONTENT_FIELDS.filter((x) => x.type === "image")) {
+      await cleanupImage(before.get(f.key), rows.find((r) => r.key === f.key)?.value);
+    }
   } catch (e) {
     return fail(e);
   }
