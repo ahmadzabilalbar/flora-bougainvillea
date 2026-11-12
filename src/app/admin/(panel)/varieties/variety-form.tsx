@@ -79,7 +79,7 @@ export function VarietyForm({ variety, types }: { variety?: Variety; types: Boug
             Cancel
           </Link>
           {variety?.published && (
-            <Link href={`/collection/${variety.id}`} target="_blank" className="ml-auto text-sm text-stone-500 hover:text-stone-900">
+            <Link href={`/koleksi/${variety.id}`} target="_blank" className="ml-auto text-sm text-stone-500 hover:text-stone-900">
               View on site ↗
             </Link>
           )}

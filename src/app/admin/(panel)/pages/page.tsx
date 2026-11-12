@@ -28,7 +28,7 @@ export default async function PagesAdmin({ searchParams }: { searchParams: Promi
             <Link key={p.id} href={`/admin/pages/${p.id}`} className="flex items-center gap-4 p-4 hover:bg-stone-50">
               <div className="min-w-0 flex-1">
                 <div className="font-medium text-stone-900">{p.title}</div>
-                <div className="text-sm text-stone-500">/pages/{p.slug}</div>
+                <div className="text-sm text-stone-500">/halaman/{p.slug}</div>
               </div>
               <span
                 className={`rounded-full px-2.5 py-1 text-xs ${

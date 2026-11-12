@@ -186,7 +186,7 @@ export async function savePage(_: FormState, fd: FormData): Promise<FormState> {
   try {
     const pages = await getPages();
     if (pages.some((p) => p.slug === slug && p.id !== id)) {
-      return { error: `Another page already uses the URL /pages/${slug}.` };
+      return { error: `Another page already uses the URL /halaman/${slug}.` };
     }
     const row = {
       slug,

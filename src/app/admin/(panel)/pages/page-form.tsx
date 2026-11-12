@@ -28,7 +28,7 @@ export function PageForm({ page }: { page?: Page }) {
               URL slug
             </label>
             <div className="flex items-center rounded-xl border border-stone-300 bg-stone-50 pl-3 text-sm text-stone-500 focus-within:border-bract-500 focus-within:ring-4 focus-within:ring-bract-500/15">
-              /pages/
+              /halaman/
               <input id="slug" name="slug" defaultValue={page?.slug} placeholder="auto from title" className="w-full rounded-r-xl bg-white px-2 py-2.5 text-stone-900 outline-none" />
             </div>
           </div>
@@ -85,7 +85,7 @@ export function PageForm({ page }: { page?: Page }) {
             Cancel
           </Link>
           {page?.published && (
-            <Link href={`/pages/${page.slug}`} target="_blank" className="ml-auto text-sm text-stone-500 hover:text-stone-900">
+            <Link href={`/halaman/${page.slug}`} target="_blank" className="ml-auto text-sm text-stone-500 hover:text-stone-900">
               View on site ↗
             </Link>
           )}

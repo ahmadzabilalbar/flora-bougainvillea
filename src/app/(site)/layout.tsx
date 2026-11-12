@@ -10,8 +10,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const published = pages.filter((p) => p.published);
   const links = [
     { href: "/", label: "Utama" },
-    { href: "/collection", label: "Koleksi" },
-    ...published.slice(0, 3).map((p) => ({ href: `/pages/${p.slug}`, label: p.title })),
+    { href: "/koleksi", label: "Koleksi" },
+    ...published.slice(0, 3).map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
   ];
 
   return (
@@ -30,7 +30,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Terokai</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              {[{ href: "/collection", label: "Koleksi" }, ...published.map((p) => ({ href: `/pages/${p.slug}`, label: p.title }))].map(
+              {[{ href: "/koleksi", label: "Koleksi" }, ...published.map((p) => ({ href: `/halaman/${p.slug}`, label: p.title }))].map(
                 (l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="hover:text-white">

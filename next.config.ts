@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   // Classic caching model: Sheets reads are cached with unstable_cache + tags (src/lib/data.ts),
   // which persists across deployments and keeps Google Sheets API usage low.
   cacheComponents: false,
+  // Public URLs are in Bahasa Melayu; keep the old English URLs working.
+  async redirects() {
+    return [
+      { source: "/collection", destination: "/koleksi", permanent: true },
+      { source: "/collection/:id", destination: "/koleksi/:id", permanent: true },
+      { source: "/pages/:slug", destination: "/halaman/:slug", permanent: true },
+    ];
+  },
   images: {
     // Admins can paste image URLs from anywhere; uploads go to Vercel Blob.
     remotePatterns: [{ protocol: "https", hostname: "**" }],

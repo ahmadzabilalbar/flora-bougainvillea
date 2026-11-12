@@ -5,7 +5,7 @@ import type { Variety } from "@/lib/schema";
 export function VarietyCard({ v, typeName, priority }: { v: Variety; typeName?: string; priority?: boolean }) {
   return (
     <Link
-      href={`/collection/${v.id}`}
+      href={`/koleksi/${v.id}`}
       className="group block overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-stone-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-bract-900/10"
     >
       <div className="relative aspect-[4/5] overflow-hidden">

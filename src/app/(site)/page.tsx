@@ -40,7 +40,7 @@ export default async function Home() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 text-pretty">{c.heroSubtitle}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/collection" className="btn-primary px-6 py-3 text-base">
+              <Link href="/koleksi" className="btn-primary px-6 py-3 text-base">
                 Terokai koleksi
               </Link>
               {show.about && (
@@ -100,7 +100,7 @@ export default async function Home() {
             {types.map((t) => (
               <Link
                 key={t.id}
-                href={`/collection?type=${encodeURIComponent(t.id)}`}
+                href={`/koleksi?type=${encodeURIComponent(t.id)}`}
                 className="shrink-0 rounded-2xl bg-white px-5 py-4 ring-1 ring-stone-200/70 transition hover:ring-bract-300"
               >
                 <div className="font-medium text-leaf-900">{t.name}</div>
@@ -125,7 +125,7 @@ export default async function Home() {
               <h2 className="mt-2 font-display text-4xl text-leaf-900">Sedang berbunga musim ini</h2>
             </div>
             <Link
-              href="/collection"
+              href="/koleksi"
               className="hidden text-sm font-medium text-bract-700 hover:text-bract-900 sm:block"
             >
               Lihat semua →

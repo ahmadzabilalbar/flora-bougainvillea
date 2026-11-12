@@ -27,7 +27,7 @@ export default async function VarietyPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
-      <Link href="/collection" className="text-sm text-stone-500 hover:text-stone-900">
+      <Link href="/koleksi" className="text-sm text-stone-500 hover:text-stone-900">
         ← Kembali ke koleksi
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
@@ -37,7 +37,7 @@ export default async function VarietyPage({ params }: Props) {
         <div className="lg:py-8">
           {type && (
             <Link
-              href={`/collection?type=${type.id}`}
+              href={`/koleksi?type=${type.id}`}
               className="inline-block rounded-full bg-leaf-50 px-3 py-1 text-sm font-medium text-leaf-700 ring-1 ring-leaf-100"
             >
               {type.name}
