@@ -1,10 +1,20 @@
-// Seed data offered from the admin "Setup" panel (public-facing text in Bahasa Melayu).
+// Seed data offered from the admin "Setup" panel. Type names use standard English terms; descriptions are in BM.
 export const SAMPLE_TYPES = [
-  { id: "glabra", name: "Glabra", description: "Pokok memanjat yang subur dengan daun licin dan brakta yang lebat.", sort: "1" },
-  { id: "buttiana", name: "Hibrid Buttiana", description: "Gugusan brakta besar dan menawan dalam tona warna hangat.", sort: "2" },
-  { id: "dwarf", name: "Kerdil", description: "Pertumbuhan padat — sesuai untuk pasu, pagar hidup dan bonsai.", sort: "3" },
-  { id: "variegated", name: "Varigata", description: "Daun bertepi krim atau keemasan yang tetap menyerlah walaupun tidak berbunga.", sort: "4" },
-  { id: "double", name: "Brakta Berganda", description: "Brakta berlapis dan beralun yang tahan berminggu-minggu.", sort: "5" },
+  // Spesies
+  { id: "glabra", name: "Glabra", description: "Spesies paling biasa ditanam. Daun licin berkilat, brakta lebat dan senang dijaga — memang sesuai untuk pemula.", sort: "1" },
+  { id: "spectabilis", name: "Spectabilis", description: "Spesies yang besar dan kuat, daunnya berbulu halus dan durinya agak panjang. Brakta biasanya magenta atau merah, berbunga lebat bila musim kering.", sort: "2" },
+  { id: "peruviana", name: "Peruviana", description: "Spesies dari Amerika Selatan dengan daun nipis dan brakta lebih kecil. Berbunga berkala sepanjang tahun, dan induk kepada hibrid Buttiana.", sort: "3" },
+  // Hibrid
+  { id: "buttiana", name: "Buttiana Hybrid", description: "Kacukan glabra × peruviana. Gugusan brakta besar dalam warna hangat — merah, jingga, emas.", sort: "4" },
+  { id: "spectoglabra", name: "Spectoglabra Hybrid", description: "Kacukan spectabilis × glabra. Pokok yang lasak dengan brakta besar dan warna terang.", sort: "5" },
+  { id: "spectoperuviana", name: "Spectoperuviana Hybrid", description: "Kacukan spectabilis × peruviana (cth. 'Mrs H.C. Buck'). Tumbuh cepat dan berbunga berulang kali.", sort: "6" },
+  // Kategori taman
+  { id: "dwarf", name: "Dwarf", description: "Pertumbuhan padat dan rendah — sesuai untuk pasu, pagar hidup dan bonsai.", sort: "7" },
+  { id: "variegated", name: "Variegated", description: "Daun bertepi krim atau keemasan yang tetap cantik walaupun tak berbunga.", sort: "8" },
+  { id: "double", name: "Double Bract", description: "Brakta berlapis-lapis dan beralun, tahan lama pada pokok sampai berminggu-minggu.", sort: "9" },
+  { id: "bicolour", name: "Bicolour", description: "Dua warna brakta pada satu pokok, macam 'Mary Palmer' — sebahagian putih, sebahagian magenta.", sort: "10" },
+  // Lain-lain
+  { id: "wild", name: "Other Wild Species", description: "Spesies jarang ditemui yang tumbuh liar di Amerika Selatan, seperti B. spinosa dan B. berberidifolia. Lebih kepada koleksi peminat tegar.", sort: "11" },
 ];
 
 export const SAMPLE_VARIETIES = [
