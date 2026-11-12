@@ -98,6 +98,8 @@ export const CONTENT_FIELDS = [
   { key: "showFeatured", label: "Show featured varieties", type: "toggle", default: "true" },
   { key: "showAbout", label: "Show about section", type: "toggle", default: "true" },
   { key: "showContact", label: "Show contact section", type: "toggle", default: "true" },
+  { key: "showTypeName", label: "Show type names on varieties (labels, filters, variety page)", type: "toggle", default: "true" },
+  { key: "showEnquiry", label: "Show WhatsApp / e-mail buttons on variety pages", type: "toggle", default: "true" },
 ] as const;
 
 export const isOn = (v: string) => v !== "false";

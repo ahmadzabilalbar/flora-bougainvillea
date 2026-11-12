@@ -5,7 +5,10 @@ import { FormMessage, ImageField, SubmitButton, Toggle, useFormAction } from "@/
 import { CONTENT_FIELDS, isOn, type ContentKey, type SiteContent } from "@/lib/schema";
 
 const SECTIONS: { title: string; keys: ContentKey[] }[] = [
-  { title: "Home — sections", keys: ["showTypes", "showFeatured", "showAbout", "showContact"] },
+  {
+    title: "Sections — show / hide",
+    keys: ["showTypes", "showFeatured", "showAbout", "showContact", "showTypeName", "showEnquiry"],
+  },
   { title: "Brand", keys: ["siteName", "tagline", "footerText"] },
   { title: "Home — hero", keys: ["heroTitle", "heroSubtitle", "heroImage"] },
   { title: "Home — about", keys: ["aboutTitle", "aboutBody"] },

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { VarietyGallery } from "@/components/variety-gallery";
 import { VarietyCard } from "@/components/variety-card";
 import { getContent, getTypes, getVarieties } from "@/lib/data";
-import { VARIETY_PHOTOS } from "@/lib/schema";
+import { VARIETY_PHOTOS, isOn } from "@/lib/schema";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -22,8 +22,10 @@ export default async function VarietyPage({ params }: Props) {
   const { id } = await params;
   const [v, types, all, c] = await Promise.all([load(id), getTypes(), getVarieties(), getContent()]);
   if (!v) notFound();
-  const type = types.find((t) => t.id === v.typeId);
-  const related = all.filter((x) => x.published && x.id !== v.id && x.typeId === v.typeId).slice(0, 4);
+  // Treat the type as unknown when type names are hidden: hides the tag, "Tentang …" box and card labels.
+  const type = isOn(c.showTypeName) ? types.find((t) => t.id === v.typeId) : undefined;
+  const showEnquiry = isOn(c.showEnquiry);
+  const related = all.filter((x) => x.published && x.id !== v.id && x.typeId === v.typeId).slice(0, 4); // same type, even if its name is hidden
   const enquiry = encodeURIComponent(`Hai! Saya pun minat bougainvillea "${v.name}". Boleh kongsi tips jaga?`);
 
   return (
@@ -61,32 +63,36 @@ export default async function VarietyPage({ params }: Props) {
               <p className="mt-1 text-sm text-stone-600">{type.description}</p>
             </div>
           )}
-          <div className="mt-8 flex flex-wrap gap-3">
-            {c.whatsapp && (
-              <a
-                href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}?text=${enquiry}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary px-6 py-3 text-base"
-              >
-                Sembang pasal varieti ni
-              </a>
-            )}
-            {c.contactEmail && (
-              <a
-                href={`mailto:${c.contactEmail}?subject=${encodeURIComponent(v.name)}&body=${enquiry}`}
-                className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}
-              >
-                Hantar e-mel
-              </a>
-            )}
-          </div>
+          {showEnquiry && (c.whatsapp || c.contactEmail) && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              {c.whatsapp && (
+                <a
+                  href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}?text=${enquiry}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary px-6 py-3 text-base"
+                >
+                  Sembang pasal varieti ni
+                </a>
+              )}
+              {c.contactEmail && (
+                <a
+                  href={`mailto:${c.contactEmail}?subject=${encodeURIComponent(v.name)}&body=${enquiry}`}
+                  className={`${c.whatsapp ? "btn-ghost" : "btn-primary"} px-6 py-3 text-base`}
+                >
+                  Hantar e-mel
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {related.length > 0 && (
         <section className="mt-24">
-          <h2 className="font-display text-3xl text-leaf-900">{type ? `Lagi ${type.name} dalam koleksi` : "Varieti lain"}</h2>
+          <h2 className="font-display text-3xl text-leaf-900">
+            {type ? `Lagi ${type.name} dalam koleksi` : "Varieti lain"}
+          </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((r) => (
               <VarietyCard key={r.id} v={r} typeName={type?.name} />

@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
 import { CollectionBrowser } from "./collection-browser";
-import { getTypes, getVarieties, safe } from "@/lib/data";
+import { getContent, getTypes, getVarieties, safe } from "@/lib/data";
+import { CONTENT_FIELDS, isOn, type SiteContent } from "@/lib/schema";
+
+const defaults = Object.fromEntries(CONTENT_FIELDS.map((f) => [f.key, f.default])) as SiteContent;
 
 export const metadata: Metadata = { title: "Koleksi" };
 
 export default async function CollectionPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
-  const [{ type }, types, varieties] = await Promise.all([searchParams, safe(getTypes(), []), safe(getVarieties(), [])]);
+  const [params, allTypes, varieties, c] = await Promise.all([
+    searchParams,
+    safe(getTypes(), []),
+    safe(getVarieties(), []),
+    safe(getContent(), defaults),
+  ]);
+  const showTypeName = isOn(c.showTypeName);
+  const types = showTypeName ? allTypes : [];
+  const type = showTypeName ? params.type : undefined;
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 md:pt-16">

@@ -14,7 +14,7 @@ export default async function Home() {
   ]);
   const varieties = all.filter((v) => v.published);
   const featured = (varieties.some((v) => v.featured) ? varieties.filter((v) => v.featured) : varieties).slice(0, 8);
-  const typeName = new Map(types.map((t) => [t.id, t.name]));
+  const typeName = new Map(isOn(c.showTypeName) ? types.map((t) => [t.id, t.name]) : []);
   const collage = varieties.slice(0, 3);
   const show = {
     types: isOn(c.showTypes),
