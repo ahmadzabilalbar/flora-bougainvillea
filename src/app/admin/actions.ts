@@ -221,6 +221,18 @@ export async function deleteGalleryItem(fd: FormData): Promise<FormState> {
   return { ok: "Photo deleted." };
 }
 
+/** Admin "Renumber" button: closes gaps left by older deletes or manual numbering. */
+export async function renumberGalleryAction(): Promise<FormState> {
+  await requireAdmin();
+  try {
+    await renumberGallery(await store.list("Gallery"));
+  } catch (e) {
+    return fail(e);
+  }
+  refresh();
+  return { ok: "Photos renumbered." };
+}
+
 /** Closes gaps: numbers become 1, 2, 3… in the current gallery order (one batch write, changed rows only). */
 async function renumberGallery(rows: Record<string, string>[]) {
   const ordered = rows

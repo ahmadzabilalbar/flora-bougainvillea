@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { addGalleryPhoto, deleteGalleryItem, updateGalleryItem, type FormState } from "../../actions";
+import { addGalleryPhoto, deleteGalleryItem, renumberGalleryAction, updateGalleryItem, type FormState } from "../../actions";
 import { FormMessage } from "@/components/admin/form-bits";
 import { GALLERY_SIZE, compressImage } from "@/lib/compress-image";
 import { nameKey, suggestName } from "@/lib/gallery-names";
@@ -329,6 +329,25 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
         <input ref={fileRef} type="file" accept={ACCEPT} className="sr-only" onChange={(e) => replace(e.currentTarget)} />
         {state?.error && <FormMessage state={state} />}
       </form>
+    </div>
+  );
+}
+
+/** Shown when the numbers have gaps (e.g. 1, 3, 4): one click renumbers everything 1, 2, 3… */
+export function RenumberNotice({ missing, total }: { missing: number[]; total: number }) {
+  const [state, setState] = useState<FormState>();
+  const [pending, start] = useTransition();
+  const list = missing.length > 5 ? `${missing.slice(0, 5).map((n) => `#${n}`).join(", ")}…` : missing.map((n) => `#${n}`).join(", ");
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4">
+      <p className="text-sm text-amber-900">
+        {missing.length ? `Some numbers are skipped (${list}).` : "Some numbers are repeated."} Renumber so the photos run #1
+        to #{total} in their current order?
+      </p>
+      <button type="button" className="btn-primary" disabled={pending} onClick={() => start(async () => setState(await renumberGalleryAction()))}>
+        {pending ? "Renumbering…" : "Renumber"}
+      </button>
+      {state?.error && <FormMessage state={state} />}
     </div>
   );
 }
