@@ -7,8 +7,8 @@ export const MAX_DIMENSION = 1600;
 export const TARGET_BYTES = 500 * 1024;
 /** Server rejects anything larger (see src/lib/images.ts). */
 export const MAX_UPLOAD_BYTES = 1.2 * 1024 * 1024;
-/** Gallery photos: square edge in pixels — crisp on phones and in the desktop lightbox, small on disk. */
-export const GALLERY_SIZE = 1080;
+/** Gallery photos: square edge in pixels — sharp in the grid on any screen, ~80–150 KB on disk. */
+export const GALLERY_SIZE = 800;
 
 export type CompressOptions = {
   /** Crop to a square with this edge length (never upscales). Centred unless `avoidText` moves it. */

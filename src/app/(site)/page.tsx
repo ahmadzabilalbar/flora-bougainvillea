@@ -224,11 +224,9 @@ async function GalleryHome({ c }: { c: SiteContent }) {
     <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 md:pt-16">
       <p className="text-sm font-medium uppercase tracking-widest text-bract-600">{c.tagline}</p>
       <h1 className="mt-2 font-display text-5xl text-leaf-900 sm:text-6xl">{c.siteName}</h1>
-      <p className="mt-4 max-w-2xl text-lg text-stone-600">
-        {items.length
-          ? `${items.length} gambar dari laman kami. Klik gambar untuk tengok lebih besar.`
-          : "Belum ada gambar lagi. Datang lagi nanti!"}
-      </p>
+      {items.length === 0 && (
+        <p className="mt-4 max-w-2xl text-lg text-stone-600">Belum ada gambar lagi. Datang lagi nanti!</p>
+      )}
       {items.length > 0 && (
         <div className="mt-10">
           <GalleryGrid items={items} />

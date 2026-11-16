@@ -209,14 +209,27 @@ export async function deleteGalleryItem(fd: FormData): Promise<FormState> {
   await requireAdmin();
   const id = str(fd, "id", 50);
   try {
-    const previous = (await store.list("Gallery")).find((r) => r.id === id);
+    const rows = await store.list("Gallery");
+    const previous = rows.find((r) => r.id === id);
     await store.remove("Gallery", "id", id);
+    await renumberGallery(rows.filter((r) => r.id !== id));
     await cleanupImage(previous?.imageUrl);
   } catch (e) {
     return fail(e);
   }
   refresh();
   return { ok: "Photo deleted." };
+}
+
+/** Closes gaps: numbers become 1, 2, 3… in the current gallery order (one batch write, changed rows only). */
+async function renumberGallery(rows: Record<string, string>[]) {
+  const ordered = rows
+    .filter((r) => r.id)
+    .sort((a, b) => (Number(a.number) || 0) - (Number(b.number) || 0) || (a.createdAt ?? "").localeCompare(b.createdAt ?? ""));
+  const changed = ordered
+    .map((r, i) => ({ id: r.id, number: String(i + 1) }))
+    .filter((r, i) => ordered[i].number !== r.number);
+  if (changed.length) await store.upsertMany("Gallery", "id", changed.map((r) => ({ ...r, updatedAt: now() })));
 }
 
 // ---------- Types ----------

@@ -9,11 +9,15 @@ import type { GalleryItem } from "@/lib/schema";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,image/gif,image/avif";
 
+/** "BOUGAINVILLEA_pink-lady (2).jpg" → "Bougainvillea Pink Lady (2)" */
 const fileName = (f: File) =>
   f.name
     .replace(/\.[^.]+$/, "")
     .replace(/[_-]+/g, " ")
-    .trim();
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/(^|[\s(])\p{L}/gu, (m) => m.toUpperCase());
 
 /** A picked file waiting to upload. `flagged` rows had a name clash and are shown for review. */
 type Row = { file: File; name: string; skip: boolean; flagged: boolean; preview?: string };
@@ -314,7 +318,8 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
               disabled={pending}
               className="btn-ghost px-2.5 py-1 text-xs text-red-700 hover:bg-red-50"
               onClick={() => {
-                if (confirm(`Delete photo #${item.number}${item.name ? ` “${item.name}”` : ""}?`)) run(new FormData(), deleteGalleryItem);
+                if (confirm(`Delete photo #${item.number}${item.name ? ` “${item.name}”` : ""}?\n\nPhotos after it move up one number to fill the gap.`))
+                  run(new FormData(), deleteGalleryItem);
               }}
             >
               Delete
