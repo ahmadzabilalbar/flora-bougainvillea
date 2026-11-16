@@ -85,14 +85,21 @@ export function GalleryUploader({ items }: { items: GalleryItem[] }) {
     if (!todo.length) return setState({ ok: "Nothing uploaded — all photos were skipped." });
     setProgress({ done: 0, total: todo.length });
     const errors: string[] = [];
+    const moved: string[] = [];
+    const withText: string[] = [];
+    let unchecked = 0;
     for (const [i, row] of todo.entries()) {
       try {
-        const { file } = await compressImage(row.file, { square: GALLERY_SIZE });
+        const { file, text } = await compressImage(row.file, { square: GALLERY_SIZE, avoidText: true });
+        const label = row.name.trim() || row.file.name;
         const fd = new FormData();
         fd.set("file", file);
         fd.set("name", row.name.trim());
         const res = await addGalleryPhoto(fd);
         if (res?.error) errors.push(`${row.file.name}: ${res.error}`);
+        else if (text === "avoided") moved.push(label);
+        else if (text === "partial") withText.push(label);
+        else if (text === "unchecked") unchecked++;
       } catch (e) {
         errors.push(`${row.file.name}: ${e instanceof Error ? e.message : "Upload failed."}`);
       }
@@ -101,10 +108,16 @@ export function GalleryUploader({ items }: { items: GalleryItem[] }) {
     setProgress(null);
     const added = todo.length - errors.length;
     const skipNote = skipped ? ` ${skipped} skipped.` : "";
+    const movedNote = moved.length ? ` Crop moved to leave out text in: ${moved.join(", ")}.` : "";
+    const textNote = withText.length
+      ? ` Text could not be fully cropped out of: ${withText.join(", ")} — use Replace with an edited photo.`
+      : "";
+    const uncheckedNote = unchecked ? ` ${unchecked} could not be checked for text (centre crop used).` : "";
+    const notes = `${skipNote}${movedNote}${textNote}${uncheckedNote}`;
     setState(
-      errors.length
-        ? { error: `${added} of ${todo.length} uploaded.${skipNote} ${errors.join(" · ")}` }
-        : { ok: `${added} photo${added === 1 ? "" : "s"} added, named from the file names.${skipNote}` },
+      errors.length || withText.length
+        ? { error: `${added} of ${todo.length} uploaded.${notes} ${errors.join(" · ")}`.trim() }
+        : { ok: `${added} photo${added === 1 ? "" : "s"} added, named from the file names.${notes}` },
     );
   };
 
@@ -129,10 +142,10 @@ export function GalleryUploader({ items }: { items: GalleryItem[] }) {
           <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
         </svg>
         <span className="mt-2 text-sm font-medium text-stone-800">
-          {busy ? `Uploading ${Math.min(progress.done + 1, progress.total)} of ${progress.total}…` : "Upload photos"}
+          {busy ? `Checking for text & uploading ${Math.min(progress.done + 1, progress.total)} of ${progress.total}…` : "Upload photos"}
         </span>
         <span className="text-xs text-stone-500">
-          Choose or drop several at once · JPG, PNG, WebP · named from the file name · auto-cropped to a centered square, {GALLERY_SIZE}px
+          Choose or drop several at once · JPG, PNG, WebP · named from the file name · cropped to a {GALLERY_SIZE}px square that leaves out text and numbers
         </span>
         <input
           ref={inputRef}
@@ -242,7 +255,7 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
     const original = input.files?.[0];
     if (!original) return;
     try {
-      const { file } = await compressImage(original, { square: GALLERY_SIZE });
+      const { file } = await compressImage(original, { square: GALLERY_SIZE, avoidText: true });
       const fd = new FormData();
       fd.set("file", file);
       run(fd, updateGalleryItem);

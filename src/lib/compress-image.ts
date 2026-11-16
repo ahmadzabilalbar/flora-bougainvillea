@@ -1,4 +1,5 @@
 // Browser-only: shrink a photo to a web/phone-friendly size before it is uploaded.
+import type { TextResult } from "./text-safe-crop";
 
 /** Longest edge in pixels — sharp on phones and laptops, still small on disk. */
 export const MAX_DIMENSION = 1600;
@@ -10,11 +11,20 @@ export const MAX_UPLOAD_BYTES = 1.2 * 1024 * 1024;
 export const GALLERY_SIZE = 1080;
 
 export type CompressOptions = {
-  /** Center-crop to a square with this edge length (never upscales). */
+  /** Crop to a square with this edge length (never upscales). Centred unless `avoidText` moves it. */
   square?: number;
+  /** With `square`: read the photo for text/numbers and pick a square that leaves them out. */
+  avoidText?: boolean;
 };
 
-export type Compressed = { file: File; width: number; height: number; originalBytes: number };
+export type Compressed = {
+  file: File;
+  width: number;
+  height: number;
+  originalBytes: number;
+  /** Set when `avoidText` ran — see TextResult in src/lib/text-safe-crop.ts. */
+  text?: TextResult;
+};
 
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -40,11 +50,16 @@ export async function compressImage(file: File, options: CompressOptions = {}): 
   const img = await loadImage(file);
   const { naturalWidth: w, naturalHeight: h } = img;
 
-  // Source rectangle: the whole photo, or its centered square when cropping.
+  // Source rectangle: the whole photo, its centred square, or a square chosen to leave out text.
   const side = Math.min(w, h);
-  const src = options.square
+  let text: TextResult | undefined;
+  let src = options.square
     ? { x: (w - side) / 2, y: (h - side) / 2, w: side, h: side }
     : { x: 0, y: 0, w, h };
+  if (options.square && options.avoidText) {
+    const { textFreeSquare } = await import("./text-safe-crop"); // OCR is only loaded when needed
+    ({ rect: src, text } = await textFreeSquare(img));
+  }
   const limit = options.square ?? MAX_DIMENSION;
   const scale = Math.min(1, limit / Math.max(src.w, src.h));
   const width = Math.round(src.w * scale);
@@ -78,6 +93,7 @@ export async function compressImage(file: File, options: CompressOptions = {}): 
     width,
     height,
     originalBytes: file.size,
+    text,
   };
 }
 
