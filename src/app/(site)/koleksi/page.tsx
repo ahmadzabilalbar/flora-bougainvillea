@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { CollectionBrowser } from "./collection-browser";
 import { getContent, getTypes, getVarieties, safe } from "@/lib/data";
 import { CONTENT_FIELDS, isOn, type SiteContent } from "@/lib/schema";
@@ -14,6 +15,7 @@ export default async function CollectionPage({ searchParams }: { searchParams: P
     safe(getVarieties(), []),
     safe(getContent(), defaults),
   ]);
+  if (!isOn(c.showKoleksi)) notFound();
   const showTypeName = isOn(c.showTypeName);
   const types = showTypeName ? allTypes : [];
   const type = showTypeName ? params.type : undefined;

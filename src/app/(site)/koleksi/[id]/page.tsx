@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function VarietyPage({ params }: Props) {
   const { id } = await params;
   const [v, types, all, c] = await Promise.all([load(id), getTypes(), getVarieties(), getContent()]);
-  if (!v) notFound();
+  if (!v || !isOn(c.showKoleksi)) notFound();
   // Treat the type as unknown when type names are hidden: hides the tag, "Tentang …" box and card labels.
   const type = isOn(c.showTypeName) ? types.find((t) => t.id === v.typeId) : undefined;
   const showEnquiry = isOn(c.showEnquiry);

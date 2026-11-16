@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MaybeLink } from "@/components/maybe-link";
 import { FlowerImage } from "@/components/flower-image";
 import { VarietyCard } from "@/components/variety-card";
 import { getContent, getTypes, getVarieties, safe } from "@/lib/data";
@@ -18,7 +19,9 @@ export default async function Home() {
   const collage = varieties.slice(0, 3);
   const show = {
     types: isOn(c.showTypes),
-    featured: isOn(c.showFeatured),
+    koleksi: isOn(c.showKoleksi),
+    galeri: isOn(c.showGaleri),
+    featured: isOn(c.showFeatured) && isOn(c.showKoleksi), // its cards open variety pages under /koleksi
     about: isOn(c.showAbout),
     contact: isOn(c.showContact),
   };
@@ -40,9 +43,17 @@ export default async function Home() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 text-pretty">{c.heroSubtitle}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/koleksi" className="btn-primary px-6 py-3 text-base">
-                Tengok koleksi
-              </Link>
+              {show.koleksi ? (
+                <Link href="/koleksi" className="btn-primary px-6 py-3 text-base">
+                  Tengok koleksi
+                </Link>
+              ) : (
+                show.galeri && (
+                  <Link href="/galeri" className="btn-primary px-6 py-3 text-base">
+                    Tengok galeri
+                  </Link>
+                )
+              )}
               {show.about && (
                 <Link href="#about" className="btn-ghost px-6 py-3 text-base">
                   Kisahnya
@@ -98,9 +109,9 @@ export default async function Home() {
         <section className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none]">
             {types.map((t) => (
-              <Link
+              <MaybeLink
                 key={t.id}
-                href={`/koleksi?type=${encodeURIComponent(t.id)}`}
+                href={show.koleksi ? `/koleksi?type=${encodeURIComponent(t.id)}` : undefined}
                 className="w-64 shrink-0 rounded-2xl bg-white px-5 py-4 ring-1 ring-stone-200/70 transition hover:ring-bract-300"
               >
                 <div className="flex items-baseline justify-between gap-2">
@@ -110,7 +121,7 @@ export default async function Home() {
                   </span>
                 </div>
                 {t.description && <p className="mt-1.5 line-clamp-2 text-sm text-stone-500">{t.description}</p>}
-              </Link>
+              </MaybeLink>
             ))}
             {isOn(c.showTypeName) && (
               <Link

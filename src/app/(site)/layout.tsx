@@ -10,8 +10,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const published = pages.filter((p) => p.published);
   const links = [
     { href: "/", label: "Utama" },
-    { href: "/koleksi", label: "Koleksi" },
-    { href: "/galeri", label: "Galeri" },
+    ...(isOn(c.showKoleksi) ? [{ href: "/koleksi", label: "Koleksi" }] : []),
+    ...(isOn(c.showGaleri) ? [{ href: "/galeri", label: "Galeri" }] : []),
     ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
     ...published.slice(0, 3).map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
   ];
@@ -33,8 +33,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <h3 className="text-xs font-semibold uppercase tracking-widest text-leaf-100/50">Terokai</h3>
             <ul className="mt-4 space-y-2 text-sm">
               {[
-                { href: "/koleksi", label: "Koleksi" },
-                { href: "/galeri", label: "Galeri" },
+                ...(isOn(c.showKoleksi) ? [{ href: "/koleksi", label: "Koleksi" }] : []),
+                ...(isOn(c.showGaleri) ? [{ href: "/galeri", label: "Galeri" }] : []),
                 ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
                 ...published.map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
               ].map((l) => (

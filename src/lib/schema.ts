@@ -105,6 +105,8 @@ export const CONTENT_FIELDS = [
   { key: "whatsapp", label: "WhatsApp number (digits only, with country code)", type: "text", default: "" },
   { key: "address", label: "Address", type: "textarea", default: "" },
   { key: "footerText", label: "Footer text", type: "text", default: "Ditanam sebab minat, dikongsi sebab seronok." },
+  { key: "showKoleksi", label: "Show Koleksi page (collection, variety pages and featured varieties on home)", type: "toggle", default: "true" },
+  { key: "showGaleri", label: "Show Galeri page (photo gallery)", type: "toggle", default: "true" },
   { key: "showTypes", label: "Show types strip", type: "toggle", default: "true" },
   { key: "showFeatured", label: "Show featured varieties", type: "toggle", default: "true" },
   { key: "showAbout", label: "Show about section", type: "toggle", default: "true" },
