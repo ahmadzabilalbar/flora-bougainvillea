@@ -18,7 +18,6 @@ const fileName = (f: File) =>
 export function GalleryUploader() {
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [state, setState] = useState<FormState>();
-  const [useFileNames, setUseFileNames] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const upload = async (files: File[]) => {
@@ -31,7 +30,7 @@ export function GalleryUploader() {
         const { file } = await compressImage(original, { square: GALLERY_SIZE });
         const fd = new FormData();
         fd.set("file", file);
-        if (useFileNames) fd.set("name", fileName(original));
+        fd.set("name", fileName(original));
         const res = await addGalleryPhoto(fd);
         if (res?.error) errors.push(`${original.name}: ${res.error}`);
       } catch (e) {
@@ -45,7 +44,7 @@ export function GalleryUploader() {
     setState(
       errors.length
         ? { error: `${added} of ${files.length} uploaded. ${errors.join(" · ")}` }
-        : { ok: `${added} photo${added === 1 ? "" : "s"} added. Give them names below.` },
+        : { ok: `${added} photo${added === 1 ? "" : "s"} added, named from the file names.` },
     );
   };
 
@@ -70,7 +69,7 @@ export function GalleryUploader() {
           {busy ? `Uploading ${Math.min(progress.done + 1, progress.total)} of ${progress.total}…` : "Upload photos"}
         </span>
         <span className="text-xs text-stone-500">
-          Choose or drop several at once · JPG, PNG, WebP · auto-cropped to a centered square, {GALLERY_SIZE}px
+          Choose or drop several at once · JPG, PNG, WebP · named from the file name · auto-cropped to a centered square, {GALLERY_SIZE}px
         </span>
         <input
           ref={inputRef}
@@ -87,10 +86,6 @@ export function GalleryUploader() {
           <div className="h-full bg-bract-600 transition-all" style={{ width: `${(progress.done / progress.total) * 100}%` }} />
         </div>
       )}
-      <label className="flex items-center gap-2 text-sm text-stone-600">
-        <input type="checkbox" checked={useFileNames} onChange={(e) => setUseFileNames(e.target.checked)} />
-        Use the file name as the photo name
-      </label>
       <FormMessage state={state} />
     </div>
   );
