@@ -303,6 +303,17 @@ export async function savePage(_: FormState, fd: FormData): Promise<FormState> {
   redirect("/admin/pages?saved=1");
 }
 
+export async function setPagePublished(id: string, published: boolean): Promise<FormState> {
+  await requireAdmin();
+  try {
+    const found = await store.update("Pages", "id", id, { published: published ? "TRUE" : "FALSE", updatedAt: now() });
+    if (!found) return { error: "This page no longer exists." };
+  } catch (e) {
+    return fail(e);
+  }
+  refresh();
+}
+
 export async function deletePage(fd: FormData) {
   await requireAdmin();
   await store.remove("Pages", "id", str(fd, "id", 50));
