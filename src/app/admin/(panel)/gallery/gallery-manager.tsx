@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { addGalleryPhoto, deleteGalleryItem, updateGalleryItem, type FormState } from "../../actions";
 import { FormMessage } from "@/components/admin/form-bits";
-import { MAX_DIMENSION, compressImage } from "@/lib/compress-image";
+import { GALLERY_SIZE, compressImage } from "@/lib/compress-image";
 import type { GalleryItem } from "@/lib/schema";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,image/gif,image/avif";
@@ -28,7 +28,7 @@ export function GalleryUploader() {
     const errors: string[] = [];
     for (const [i, original] of files.entries()) {
       try {
-        const { file } = await compressImage(original);
+        const { file } = await compressImage(original, { square: GALLERY_SIZE });
         const fd = new FormData();
         fd.set("file", file);
         if (useFileNames) fd.set("name", fileName(original));
@@ -70,7 +70,7 @@ export function GalleryUploader() {
           {busy ? `Uploading ${Math.min(progress.done + 1, progress.total)} of ${progress.total}…` : "Upload photos"}
         </span>
         <span className="text-xs text-stone-500">
-          Choose or drop several at once · JPG, PNG, WebP · auto-resized to {MAX_DIMENSION}px
+          Choose or drop several at once · JPG, PNG, WebP · auto-cropped to a centered square, {GALLERY_SIZE}px
         </span>
         <input
           ref={inputRef}
@@ -124,7 +124,7 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
     const original = input.files?.[0];
     if (!original) return;
     try {
-      const { file } = await compressImage(original);
+      const { file } = await compressImage(original, { square: GALLERY_SIZE });
       const fd = new FormData();
       fd.set("file", file);
       run(fd, updateGalleryItem);

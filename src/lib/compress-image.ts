@@ -6,6 +6,13 @@ export const MAX_DIMENSION = 1600;
 export const TARGET_BYTES = 500 * 1024;
 /** Server rejects anything larger (see src/lib/images.ts). */
 export const MAX_UPLOAD_BYTES = 1.2 * 1024 * 1024;
+/** Gallery photos: square edge in pixels — crisp on phones and in the desktop lightbox, small on disk. */
+export const GALLERY_SIZE = 1080;
+
+export type CompressOptions = {
+  /** Center-crop to a square with this edge length (never upscales). */
+  square?: number;
+};
 
 export type Compressed = { file: File; width: number; height: number; originalBytes: number };
 
@@ -29,11 +36,19 @@ function loadImage(file: File): Promise<HTMLImageElement> {
 const toBlob = (canvas: HTMLCanvasElement, type: string, quality: number) =>
   new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
 
-export async function compressImage(file: File): Promise<Compressed> {
+export async function compressImage(file: File, options: CompressOptions = {}): Promise<Compressed> {
   const img = await loadImage(file);
-  const scale = Math.min(1, MAX_DIMENSION / Math.max(img.naturalWidth, img.naturalHeight));
-  const width = Math.round(img.naturalWidth * scale);
-  const height = Math.round(img.naturalHeight * scale);
+  const { naturalWidth: w, naturalHeight: h } = img;
+
+  // Source rectangle: the whole photo, or its centered square when cropping.
+  const side = Math.min(w, h);
+  const src = options.square
+    ? { x: (w - side) / 2, y: (h - side) / 2, w: side, h: side }
+    : { x: 0, y: 0, w, h };
+  const limit = options.square ?? MAX_DIMENSION;
+  const scale = Math.min(1, limit / Math.max(src.w, src.h));
+  const width = Math.round(src.w * scale);
+  const height = Math.round(src.h * scale);
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -42,7 +57,7 @@ export async function compressImage(file: File): Promise<Compressed> {
   ctx.fillStyle = "#ffffff"; // flatten transparency for JPEG fallback
   ctx.fillRect(0, 0, width, height);
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(img, 0, 0, width, height);
+  ctx.drawImage(img, src.x, src.y, src.w, src.h, 0, 0, width, height);
 
   // Prefer WebP; older Safari silently returns PNG, so fall back to JPEG.
   const probe = await toBlob(canvas, "image/webp", 0.8);
