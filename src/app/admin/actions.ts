@@ -5,7 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { DATA_TAG, getContent, getPages, getTypes, getVarieties } from "@/lib/data";
-import { deleteStoredImage, imageFromForm } from "@/lib/images";
+import { deleteStoredImage, imageFromForm, saveUpload } from "@/lib/images";
 import { CONTENT_FIELDS, VARIETY_PHOTOS } from "@/lib/schema";
 import { store } from "@/lib/store";
 import { SAMPLE_PAGES, SAMPLE_TYPES, SAMPLE_VARIETIES } from "@/lib/sample-data";
@@ -24,9 +24,15 @@ function refresh() {
 /** Deletes `oldUrl` from storage if it changed and nothing else still uses it. */
 async function cleanupImage(oldUrl: string | undefined, newUrl = "") {
   if (!oldUrl || oldUrl === newUrl) return;
-  const [varieties, content] = await Promise.all([store.list("Varieties"), store.list("Content")]);
+  const [varieties, content, gallery] = await Promise.all([
+    store.list("Varieties"),
+    store.list("Content"),
+    store.list("Gallery"),
+  ]);
   const inUse =
-    varieties.some((v) => VARIETY_PHOTOS.some((p) => v[p.field] === oldUrl)) || content.some((c) => c.value === oldUrl);
+    varieties.some((v) => VARIETY_PHOTOS.some((p) => v[p.field] === oldUrl)) ||
+    content.some((c) => c.value === oldUrl) ||
+    gallery.some((g) => g.imageUrl === oldUrl);
   if (!inUse) await deleteStoredImage(oldUrl);
 }
 
@@ -128,6 +134,75 @@ export async function toggleVarietyFlag(_: FormState, fd: FormData): Promise<For
   }
   await store.update("Varieties", "id", id, { [field]: on ? "TRUE" : "FALSE", updatedAt: now() });
   refresh();
+}
+
+// ---------- Gallery ----------
+// Called directly from the gallery manager (one photo per request keeps uploads under the body limit).
+
+const uploadedFile = (fd: FormData) => {
+  const file = fd.get("file");
+  return file instanceof File && file.size > 0 ? file : null;
+};
+
+export async function addGalleryPhoto(fd: FormData): Promise<FormState> {
+  await requireAdmin();
+  const file = uploadedFile(fd);
+  if (!file) return { error: "Choose a photo to upload." };
+  try {
+    const rows = await store.list("Gallery");
+    const number = rows.reduce((max, r) => Math.max(max, Number(r.number) || 0), 0) + 1;
+    const imageUrl = await saveUpload(file);
+    await store.insert("Gallery", {
+      id: newId(),
+      number: String(number),
+      name: str(fd, "name", 120),
+      imageUrl,
+      createdAt: now(),
+      updatedAt: now(),
+    });
+  } catch (e) {
+    return fail(e);
+  }
+  refresh();
+  return { ok: "Photo added." };
+}
+
+export async function updateGalleryItem(fd: FormData): Promise<FormState> {
+  await requireAdmin();
+  const id = str(fd, "id", 50);
+  const patch: Record<string, string> = { updatedAt: now() };
+  if (fd.has("name")) patch.name = str(fd, "name", 120);
+  if (fd.has("number")) {
+    const n = Number(str(fd, "number", 6));
+    if (!Number.isInteger(n) || n < 1) return { error: "Number must be a whole number, 1 or more." };
+    patch.number = String(n);
+  }
+  try {
+    const previous = (await store.list("Gallery")).find((r) => r.id === id);
+    if (!previous) return { error: "This photo no longer exists." };
+    const file = uploadedFile(fd);
+    if (file) patch.imageUrl = await saveUpload(file);
+    await store.update("Gallery", "id", id, patch);
+    if (patch.imageUrl) await cleanupImage(previous.imageUrl, patch.imageUrl);
+  } catch (e) {
+    return fail(e);
+  }
+  refresh();
+  return { ok: "Saved." };
+}
+
+export async function deleteGalleryItem(fd: FormData): Promise<FormState> {
+  await requireAdmin();
+  const id = str(fd, "id", 50);
+  try {
+    const previous = (await store.list("Gallery")).find((r) => r.id === id);
+    await store.remove("Gallery", "id", id);
+    await cleanupImage(previous?.imageUrl);
+  } catch (e) {
+    return fail(e);
+  }
+  refresh();
+  return { ok: "Photo deleted." };
 }
 
 // ---------- Types ----------

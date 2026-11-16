@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const ITEMS = [
   { href: "/admin", label: "Dashboard", icon: "M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10" },
   { href: "/admin/varieties", label: "Varieties", icon: "M12 21c4-3 7-6 7-10a7 7 0 10-14 0c0 4 3 7 7 10zM12 11a2 2 0 100-4 2 2 0 000 4z" },
+  { href: "/admin/gallery", label: "Gallery", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M15 9.5a1.5 1.5 0 100-.01" },
   { href: "/admin/types", label: "Types", icon: "M4 6h16M4 12h10M4 18h6" },
   { href: "/admin/content", label: "Website content", icon: "M4 5h16v14H4zM8 9h8M8 13h5" },
   { href: "/admin/pages", label: "Pages", icon: "M7 3h7l5 5v13H7zM14 3v5h5" },

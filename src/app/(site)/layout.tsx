@@ -11,6 +11,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const links = [
     { href: "/", label: "Utama" },
     { href: "/koleksi", label: "Koleksi" },
+    { href: "/galeri", label: "Galeri" },
     ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
     ...published.slice(0, 3).map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
   ];
@@ -33,6 +34,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <ul className="mt-4 space-y-2 text-sm">
               {[
                 { href: "/koleksi", label: "Koleksi" },
+                { href: "/galeri", label: "Galeri" },
                 ...(isOn(c.showTypeName) ? [{ href: "/jenis", label: "Jenis" }] : []),
                 ...published.map((p) => ({ href: `/halaman/${p.slug}`, label: p.title })),
               ].map((l) => (

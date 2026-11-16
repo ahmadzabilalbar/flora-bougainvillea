@@ -4,6 +4,7 @@ import { store } from "./store";
 import {
   CONTENT_FIELDS,
   type BougainvilleaType,
+  type GalleryItem,
   type Page,
   type SiteContent,
   type Variety,
@@ -68,6 +69,21 @@ export const getPages = cached("pages", async (): Promise<Page[]> => {
     }))
     .filter((p) => p.id && p.slug)
     .sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title));
+});
+
+export const getGallery = cached("gallery", async (): Promise<GalleryItem[]> => {
+  const rows = await store.list("Gallery");
+  return rows
+    .map((r) => ({
+      id: r.id,
+      number: Number(r.number) || 0,
+      name: r.name ?? "",
+      imageUrl: r.imageUrl ?? "",
+      createdAt: r.createdAt ?? "",
+      updatedAt: r.updatedAt ?? "",
+    }))
+    .filter((g) => g.id && g.imageUrl)
+    .sort((a, b) => a.number - b.number || a.createdAt.localeCompare(b.createdAt));
 });
 
 export const getContent = cached("content", async (): Promise<SiteContent> => {

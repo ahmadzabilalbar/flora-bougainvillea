@@ -2,8 +2,8 @@
 
 A bougainvillea collection manager and website built with **Next.js 16 + Tailwind CSS v4**, using **Google Sheets as the database**. Built to deploy on **Vercel**.
 
-- **Public site:** home page (hero, featured varieties, about, contact), a filterable and searchable collection, variety detail pages with WhatsApp/email enquiry links, and CMS pages such as a care guide.
-- **Admin (`/admin`):** password login. Manage varieties (name, type, colour, description, image upload or URL, featured/published), types, website text and images, and Markdown-lite pages.
+- **Public site:** home page (hero, featured varieties, about, contact), a filterable and searchable collection, variety detail pages with WhatsApp/email enquiry links, a numbered photo gallery (`/galeri`), and CMS pages such as a care guide.
+- **Admin (`/admin`):** password login. Upload gallery photos and edit their names and numbers. Manage varieties (name, type, colour, description, image upload or URL, featured/published), types, website text and images, and Markdown-lite pages.
 - **Data:** each table is a tab in one Google Spreadsheet, so you can also edit data directly in the sheet. Edits made in the sheet appear on the site within about 60 seconds. Edits made in the admin appear immediately.
 
 ## Quick start (local)
@@ -35,6 +35,7 @@ Without Google credentials, data is stored in `.data/db.json` and uploads go to 
 | `Varieties` | id, name, typeId, color, description, imageUrl, featured, published, createdAt, updatedAt |
 | `Pages` | id, slug, title, body, published, sort, updatedAt |
 | `Content` | key, value |
+| `Gallery` | id, number, name, imageUrl, createdAt, updatedAt |
 
 Columns are matched by header name, so you can reorder them or add extra columns in the sheet.
 

@@ -17,6 +17,7 @@ export const TABLES = {
   ],
   Pages: ["id", "slug", "title", "body", "published", "sort", "updatedAt"],
   Content: ["key", "value"],
+  Gallery: ["id", "number", "name", "imageUrl", "createdAt", "updatedAt"],
 } as const;
 
 export type TableName = keyof typeof TABLES;
@@ -57,6 +58,16 @@ export const VARIETY_PHOTOS = [
 export type PhotoField = (typeof VARIETY_PHOTOS)[number]["field"];
 
 export const photoCount = (v: Pick<Variety, PhotoField>) => VARIETY_PHOTOS.filter((p) => v[p.field]).length;
+
+/** A numbered photo in the public gallery (/galeri). */
+export type GalleryItem = {
+  id: string;
+  number: number;
+  name: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type Page = {
   id: string;
