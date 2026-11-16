@@ -7,7 +7,7 @@ import { CONTENT_FIELDS, isOn, type ContentKey, type SiteContent } from "@/lib/s
 const SECTIONS: { title: string; keys: ContentKey[] }[] = [
   {
     title: "Sections — show / hide",
-    keys: ["showKoleksi", "showGaleri", "showTypes", "showFeatured", "showAbout", "showContact", "showTypeName", "showEnquiry"],
+    keys: ["homeGalleryOnly", "showHero", "showKoleksi", "showGaleri", "showTypes", "showFeatured", "showAbout", "showContact", "showTypeName", "showEnquiry"],
   },
   { title: "Brand", keys: ["siteName", "tagline", "footerText"] },
   { title: "Home — hero", keys: ["heroTitle", "heroSubtitle", "heroImage"] },
