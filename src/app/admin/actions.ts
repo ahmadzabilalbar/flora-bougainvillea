@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { DATA_TAG, getContent, getPages, getTypes, getVarieties } from "@/lib/data";
 import { deleteStoredImage, imageFromForm, saveUpload } from "@/lib/images";
+import { nameKey } from "@/lib/gallery-names";
 import { CONTENT_FIELDS, VARIETY_PHOTOS } from "@/lib/schema";
 import { store } from "@/lib/store";
 import { SAMPLE_PAGES, SAMPLE_TYPES, SAMPLE_VARIETIES } from "@/lib/sample-data";
@@ -144,18 +145,28 @@ const uploadedFile = (fd: FormData) => {
   return file instanceof File && file.size > 0 ? file : null;
 };
 
+/** Error message when another photo (not `selfId`) already has this name; empty names never clash. */
+function duplicateName(rows: Record<string, string>[], name: string, selfId?: string) {
+  const key = nameKey(name);
+  const other = key && rows.find((r) => r.id !== selfId && nameKey(r.name ?? "") === key);
+  return other ? `“${name}” is already used by photo #${other.number}. Choose another name.` : null;
+}
+
 export async function addGalleryPhoto(fd: FormData): Promise<FormState> {
   await requireAdmin();
   const file = uploadedFile(fd);
   if (!file) return { error: "Choose a photo to upload." };
   try {
     const rows = await store.list("Gallery");
+    const name = str(fd, "name", 120);
+    const clash = duplicateName(rows, name);
+    if (clash) return { error: clash };
     const number = rows.reduce((max, r) => Math.max(max, Number(r.number) || 0), 0) + 1;
     const imageUrl = await saveUpload(file);
     await store.insert("Gallery", {
       id: newId(),
       number: String(number),
-      name: str(fd, "name", 120),
+      name,
       imageUrl,
       createdAt: now(),
       updatedAt: now(),
@@ -178,8 +189,11 @@ export async function updateGalleryItem(fd: FormData): Promise<FormState> {
     patch.number = String(n);
   }
   try {
-    const previous = (await store.list("Gallery")).find((r) => r.id === id);
+    const rows = await store.list("Gallery");
+    const previous = rows.find((r) => r.id === id);
     if (!previous) return { error: "This photo no longer exists." };
+    const clash = patch.name !== undefined && duplicateName(rows, patch.name, id);
+    if (clash) return { error: clash };
     const file = uploadedFile(fd);
     if (file) patch.imageUrl = await saveUpload(file);
     await store.update("Gallery", "id", id, patch);
